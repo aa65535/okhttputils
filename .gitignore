@@ -1,9 +1,5 @@
-*.iml
 *.log
 .DS_Store
 .gradle
-.idea
-.svn
-/captures
-/local.properties
 build
+/local.properties

@@ -1,23 +1,102 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
 }
+
+plugins {
+    id "com.jfrog.bintray" version "1.6"
+}
+
+group = 'aa65535.utils.okhttp'
+version = '1.0.0'
 
 allprojects {
     repositories {
         jcenter()
     }
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+task sourcesJar (type:Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id 'aa65535'
+            name 'Jian Chang'
+            email 'aa65535@live.com'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId 'okhttputils'
+            artifact javadocJar
+            artifact sourcesJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A utils of okhttp')
+                root.children().last() + pomConfig
+
+                def dependenciesNode = root.appendNode('dependencies')
+                configurations.compile.allDependencies.each {
+                    if (it.group && it.name && it.version) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+}
+
+bintray {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        name = 'okhttputils'
+        desc = 'A utils of okhttp'
+        websiteUrl = 'https://github.com/aa65535/okhttputils'
+        issueTrackerUrl = 'https://github.com/aa65535/okhttputils/issues'
+        vcsUrl = 'https://github.com/aa65535/okhttputils.git'
+        licenses = ['Apache-2.0']
+        publicDownloadNumbers = true
+    }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.10'
 }
