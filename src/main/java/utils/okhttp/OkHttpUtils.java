@@ -1,14 +1,9 @@
 package utils.okhttp;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
 
 import okhttp3.Call;
 import okhttp3.CookieJar;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import utils.okhttp.builder.GetBuilder;
@@ -22,7 +17,6 @@ import utils.okhttp.cookie.CookieJarImpl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
 import utils.okhttp.cookie.store.MemoryCookieStore;
-import utils.okhttp.https.HttpsUtils;
 import utils.okhttp.https.HttpsUtils.UnSafeHostnameVerifier;
 import utils.okhttp.request.RequestCall;
 import utils.okhttp.utils.ThreadExecutor;
@@ -30,41 +24,32 @@ import utils.okhttp.utils.ThreadExecutor;
 @SuppressWarnings("unused")
 public class OkHttpUtils {
     public static final long DEFAULT_MILLISECONDS = 10_000;
-    private static OkHttpUtils mInstance;
-    private OkHttpClient mOkHttpClient;
-    private ThreadExecutor mThreadExecutor;
+    private volatile OkHttpClient mOkHttpClient;
+    private volatile ThreadExecutor mThreadExecutor;
+    private volatile static OkHttpUtils mInstance;
 
-    public OkHttpUtils(OkHttpClient okHttpClient) {
+    private OkHttpUtils(OkHttpClient okHttpClient) {
         if (okHttpClient == null) {
-            OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-            //cookie enabled
-            okHttpClientBuilder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));
-            okHttpClientBuilder.hostnameVerifier(new UnSafeHostnameVerifier());
-            mOkHttpClient = okHttpClientBuilder.build();
+            mOkHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
+                    .hostnameVerifier(new UnSafeHostnameVerifier()).build();
         } else {
             mOkHttpClient = okHttpClient;
         }
         mThreadExecutor = new ThreadExecutor();
     }
 
-    public static OkHttpUtils getInstance(OkHttpClient okHttpClient) {
-        if (mInstance == null) {
-            synchronized (OkHttpUtils.class) {
-                if (mInstance == null) {
-                    mInstance = new OkHttpUtils(okHttpClient);
-                }
-            }
+    public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
+        if (null != mInstance) {
+            throw new UnsupportedOperationException("This method should be called before getInstance().");
         }
+        mInstance = new OkHttpUtils(okHttpClient);
         return mInstance;
     }
 
-    public static OkHttpUtils getInstance() {
+    public synchronized static OkHttpUtils getInstance() {
         if (mInstance == null) {
-            synchronized (OkHttpUtils.class) {
-                if (mInstance == null) {
-                    mInstance = new OkHttpUtils(null);
-                }
-            }
+            mInstance = new OkHttpUtils(null);
         }
         return mInstance;
     }
@@ -73,24 +58,24 @@ public class OkHttpUtils {
         return new GetBuilder();
     }
 
-    public static PostStringBuilder postString() {
-        return new PostStringBuilder();
+    public static PostFormBuilder post() {
+        return new PostFormBuilder();
     }
 
     public static PostFileBuilder postFile() {
         return new PostFileBuilder();
     }
 
-    public static PostFormBuilder post() {
-        return new PostFormBuilder();
-    }
-
-    public static OtherRequestBuilder put() {
-        return new OtherRequestBuilder(METHOD.PUT);
+    public static PostStringBuilder postString() {
+        return new PostStringBuilder();
     }
 
     public static HeadBuilder head() {
         return new HeadBuilder();
+    }
+
+    public static OtherRequestBuilder put() {
+        return new OtherRequestBuilder(METHOD.PUT);
     }
 
     public static OtherRequestBuilder delete() {
@@ -101,70 +86,12 @@ public class OkHttpUtils {
         return new OtherRequestBuilder(METHOD.PATCH);
     }
 
-    public OkHttpUtils addInterceptor(Interceptor interceptor) {
-        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(interceptor).build();
-        return this;
-    }
-
-    /**
-     * for https-way authentication
-     */
-    public OkHttpUtils setCertificates(InputStream... certificates) {
-        setCertificates(certificates, null, null);
-        return this;
-    }
-
-    /**
-     * for https mutual authentication
-     */
-    public OkHttpUtils setCertificates(InputStream[] certificates, InputStream bksFile, String password) {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, bksFile, password))
-                .build();
-        return this;
-    }
-
-    public OkHttpUtils setHostNameVerifier(HostnameVerifier hostNameVerifier) {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .hostnameVerifier(hostNameVerifier)
-                .build();
-        return this;
-    }
-
-    public OkHttpUtils setTimeout(int timeout, TimeUnit units) {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .connectTimeout(timeout, units)
-                .readTimeout(timeout, units)
-                .writeTimeout(timeout, units)
-                .build();
-        return this;
-    }
-
-    public OkHttpUtils setReadTimeout(int timeout, TimeUnit units) {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .readTimeout(timeout, units)
-                .build();
-        return this;
-    }
-
-    public OkHttpUtils setWriteTimeout(int timeout, TimeUnit units) {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .writeTimeout(timeout, units)
-                .build();
-        return this;
-    }
-
-    public ThreadExecutor getThreadExecutor() {
-        return mThreadExecutor;
-    }
-
-    public OkHttpUtils setThreadExecutor(ThreadExecutor threadExecutor) {
-        mThreadExecutor = threadExecutor;
-        return this;
-    }
-
     public OkHttpClient getOkHttpClient() {
         return mOkHttpClient;
+    }
+
+    public synchronized ThreadExecutor getThreadExecutor() {
+        return mThreadExecutor;
     }
 
     public CookieStore getCookieStore() {
@@ -174,15 +101,14 @@ public class OkHttpUtils {
         }
         if (cookieJar instanceof HasCookieStore) {
             return ((HasCookieStore) cookieJar).getCookieStore();
-        } else {
-            return null;
         }
+        return null;
     }
 
     public void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
         if (callback == null)
             return;
-        mThreadExecutor.execute(new Runnable() {
+        getThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 callback.onError(call, e);
@@ -194,7 +120,7 @@ public class OkHttpUtils {
     public <T> void sendSuccessResultCallback(final T object, final Callback<T> callback) {
         if (callback == null)
             return;
-        mThreadExecutor.execute(new Runnable() {
+        getThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 try {
