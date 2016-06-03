@@ -6,7 +6,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -22,19 +21,22 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 public class HttpsUtils {
-    public static SSLSocketFactory getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String password) {
+    public static SSLParams getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String password) {
+        SSLParams sslParams = new SSLParams();
         try {
             TrustManager[] trustManagers = prepareTrustManager(certificates);
             KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            TrustManager trustManager = null;
+            X509TrustManager trustManager;
             if (trustManagers != null) {
                 trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
             } else {
                 trustManager = new UnSafeTrustManager();
             }
-            sslContext.init(keyManagers, new TrustManager[]{trustManager}, new SecureRandom());
-            return sslContext.getSocketFactory();
+            sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
+            sslParams.sslSocketFactory = sslContext.getSocketFactory();
+            sslParams.trustManager = trustManager;
+            return sslParams;
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
             throw new AssertionError(e);
         }
@@ -93,6 +95,11 @@ public class HttpsUtils {
             }
         }
         return null;
+    }
+
+    public static class SSLParams {
+        public SSLSocketFactory sslSocketFactory;
+        public X509TrustManager trustManager;
     }
 
     private static class UnSafeTrustManager implements X509TrustManager {

@@ -17,7 +17,6 @@ import utils.okhttp.cookie.CookieJarImpl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
 import utils.okhttp.cookie.store.MemoryCookieStore;
-import utils.okhttp.https.HttpsUtils.UnSafeHostnameVerifier;
 import utils.okhttp.request.RequestCall;
 import utils.okhttp.utils.ThreadExecutor;
 
@@ -32,7 +31,7 @@ public class OkHttpUtils {
         if (okHttpClient == null) {
             mOkHttpClient = new OkHttpClient.Builder()
                     .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
-                    .hostnameVerifier(new UnSafeHostnameVerifier()).build();
+                    .build();
         } else {
             mOkHttpClient = okHttpClient;
         }
