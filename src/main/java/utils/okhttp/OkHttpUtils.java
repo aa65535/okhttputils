@@ -40,7 +40,7 @@ public class OkHttpUtils {
 
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
         if (null != mInstance) {
-            throw new UnsupportedOperationException("This method should be called before getInstance().");
+            throw new IllegalStateException("Instance already exist, it can not be created again.");
         }
         mInstance = new OkHttpUtils(okHttpClient);
         return mInstance;
