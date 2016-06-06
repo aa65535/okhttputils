@@ -6,7 +6,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class ThreadExecutor {
-    private final static Executor EXECUTOR = findExecutors();
+    private final Executor executor;
+
+    public ThreadExecutor() {
+        executor = findExecutors();
+    }
 
     private static Executor findExecutors() {
         try {
@@ -18,12 +22,12 @@ public class ThreadExecutor {
     }
 
     public void execute(Runnable runnable) {
-        EXECUTOR.execute(runnable);
+        executor.execute(runnable);
     }
 
     static class AndroidThreadExecutor implements Executor {
-        private Object handler;
-        private Method postMethod;
+        private final Object handler;
+        private final Method postMethod;
 
         public AndroidThreadExecutor() {
             try {
@@ -35,7 +39,7 @@ public class ThreadExecutor {
                 handler = handlerConstructor.newInstance(looper);
                 postMethod = handlerClass.getDeclaredMethod("post", Runnable.class);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -44,7 +48,7 @@ public class ThreadExecutor {
             try {
                 postMethod.invoke(handler, command);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

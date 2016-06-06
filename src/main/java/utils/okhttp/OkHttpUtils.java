@@ -23,8 +23,8 @@ import utils.okhttp.utils.ThreadExecutor;
 @SuppressWarnings("unused")
 public class OkHttpUtils {
     public static final long DEFAULT_MILLISECONDS = 10_000;
-    private volatile OkHttpClient mOkHttpClient;
-    private volatile ThreadExecutor mThreadExecutor;
+    private OkHttpClient mOkHttpClient;
+    private final ThreadExecutor mThreadExecutor;
     private volatile static OkHttpUtils mInstance;
 
     private OkHttpUtils(OkHttpClient okHttpClient) {
