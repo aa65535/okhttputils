@@ -6,13 +6,13 @@ import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
 public interface CookieStore {
-    void add(HttpUrl uri, List<Cookie> cookie);
+    void add(HttpUrl url, List<Cookie> cookies);
 
-    List<Cookie> get(HttpUrl uri);
+    List<Cookie> get(HttpUrl url);
 
     List<Cookie> getCookies();
 
-    boolean remove(HttpUrl uri, Cookie cookie);
+    boolean remove(HttpUrl url, Cookie cookie);
 
-    boolean removeAll();
+    void removeAll();
 }

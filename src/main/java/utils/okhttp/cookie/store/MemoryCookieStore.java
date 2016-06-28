@@ -14,15 +14,13 @@ public class MemoryCookieStore implements CookieStore {
 
     @Override
     public void add(HttpUrl url, List<Cookie> cookies) {
-        List<Cookie> oldCookies = allCookies.get(url.host());
+        List<Cookie> oldCookies = get(url);
 
-        Iterator<Cookie> itNew = cookies.iterator();
-        Iterator<Cookie> itOld = oldCookies.iterator();
-        while (itNew.hasNext()) {
-            String va = itNew.next().name();
+        for (Cookie cookie : cookies) {
+            String va = cookie.name();
+            Iterator<Cookie> itOld = oldCookies.iterator();
             while (va != null && itOld.hasNext()) {
-                String v = itOld.next().name();
-                if (v != null && va.equals(v)) {
+                if (va.equals(itOld.next().name())) {
                     itOld.remove();
                 }
             }
@@ -31,34 +29,33 @@ public class MemoryCookieStore implements CookieStore {
     }
 
     @Override
-    public List<Cookie> get(HttpUrl uri) {
-        List<Cookie> cookies = allCookies.get(uri.host());
+    public synchronized List<Cookie> get(HttpUrl url) {
+        List<Cookie> cookies = allCookies.get(url.host());
         if (cookies == null) {
             cookies = new ArrayList<>();
-            allCookies.put(uri.host(), cookies);
+            allCookies.put(url.host(), cookies);
         }
         return cookies;
     }
 
     @Override
-    public boolean removeAll() {
-        allCookies.clear();
-        return true;
-    }
-
-    @Override
     public List<Cookie> getCookies() {
         List<Cookie> cookies = new ArrayList<>();
-        Set<String> httpUrls = allCookies.keySet();
-        for (String url : httpUrls) {
+        Set<String> urls = allCookies.keySet();
+        for (String url : urls) {
             cookies.addAll(allCookies.get(url));
         }
         return cookies;
     }
 
     @Override
-    public boolean remove(HttpUrl uri, Cookie cookie) {
-        List<Cookie> cookies = allCookies.get(uri);
+    public boolean remove(HttpUrl url, Cookie cookie) {
+        List<Cookie> cookies = allCookies.get(url.host());
         return cookie != null && cookies.remove(cookie);
+    }
+
+    @Override
+    public void removeAll() {
+        allCookies.clear();
     }
 }
