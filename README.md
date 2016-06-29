@@ -5,7 +5,7 @@ A Java library of [okhttp-utils][0]
 Gradle:
 
 ```
-compile 'utils.okhttp:okhttputils:1.2.0'
+compile 'utils.okhttp:okhttputils:1.3.0'
 ```
 
 Maven:
@@ -14,7 +14,7 @@ Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -22,7 +22,7 @@ Maven:
 Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='1.2.0'>
+<dependency org='utils.okhttp' name='okhttputils' rev='1.3.0'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```

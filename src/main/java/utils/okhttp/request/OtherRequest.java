@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.internal.http.HttpMethod;
 import utils.okhttp.OkHttpUtils;
+import utils.okhttp.utils.Util;
 
 public class OtherRequest extends OkHttpRequest {
     private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
@@ -16,25 +17,21 @@ public class OtherRequest extends OkHttpRequest {
     private String content;
 
     public OtherRequest(RequestBody requestBody, String content, String method, String url,
-                        Object tag, Map<String, String> params, Map<String, String> headers) {
-        super(url, tag, params, headers);
+                        Object tag, Map<String, String> headers) {
+        super(url, tag, headers);
         this.requestBody = requestBody;
         this.method = method;
         this.content = content;
     }
 
-    private static boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
-    }
-
     @Override
     protected RequestBody buildRequestBody() {
-        if (requestBody == null && isEmpty(content) && HttpMethod.requiresRequestBody(method)) {
+        if (requestBody == null && Util.isEmpty(content) && HttpMethod.requiresRequestBody(method))
             throw new IllegalArgumentException("requestBody and content can not be null in method:" + method);
-        }
-        if (requestBody == null && !isEmpty(content)) {
+
+        if (requestBody == null && !Util.isEmpty(content))
             requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
-        }
+
         return requestBody;
     }
 

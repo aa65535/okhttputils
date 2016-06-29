@@ -28,28 +28,26 @@ public class OkHttpUtils {
     private volatile static OkHttpUtils mInstance;
 
     private OkHttpUtils(OkHttpClient okHttpClient) {
-        if (okHttpClient == null) {
+        if (okHttpClient == null)
             mOkHttpClient = new OkHttpClient.Builder()
                     .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
                     .build();
-        } else {
+        else
             mOkHttpClient = okHttpClient;
-        }
+
         mThreadExecutor = new ThreadExecutor();
     }
 
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
-        if (null != mInstance) {
+        if (null != mInstance)
             throw new IllegalStateException("Instance already exist, it can not be created again.");
-        }
         mInstance = new OkHttpUtils(okHttpClient);
         return mInstance;
     }
 
     public synchronized static OkHttpUtils getInstance() {
-        if (mInstance == null) {
+        if (mInstance == null)
             mInstance = new OkHttpUtils(null);
-        }
         return mInstance;
     }
 
@@ -95,18 +93,17 @@ public class OkHttpUtils {
 
     public CookieStore getCookieStore() {
         final CookieJar cookieJar = mOkHttpClient.cookieJar();
-        if (cookieJar == null) {
+        if (cookieJar == null)
             throw new IllegalArgumentException("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
-        }
-        if (cookieJar instanceof HasCookieStore) {
+        if (cookieJar instanceof HasCookieStore)
             return ((HasCookieStore) cookieJar).getCookieStore();
-        }
         return null;
     }
 
     public void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
         if (callback == null)
             return;
+
         getThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -119,6 +116,7 @@ public class OkHttpUtils {
     public <T> void sendSuccessResultCallback(final T object, final Callback<T> callback) {
         if (callback == null)
             return;
+
         getThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -133,21 +131,19 @@ public class OkHttpUtils {
     }
 
     public void cancelTag(Object tag) {
-        for (Call call : mOkHttpClient.dispatcher().queuedCalls()) {
-            if (tag.equals(call.request().tag())) {
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls())
+            if (tag.equals(call.request().tag()))
                 call.cancel();
-            }
-        }
-        for (Call call : mOkHttpClient.dispatcher().runningCalls()) {
-            if (tag.equals(call.request().tag())) {
+
+        for (Call call : mOkHttpClient.dispatcher().runningCalls())
+            if (tag.equals(call.request().tag()))
                 call.cancel();
-            }
-        }
     }
 
     public void execute(final RequestCall requestCall, Callback<?> callback) {
         if (callback == null)
             callback = Callback.CALLBACK_DEFAULT;
+
         final Callback finalCallback = callback;
 
         requestCall.getCall().enqueue(new okhttp3.Callback() {
@@ -158,22 +154,21 @@ public class OkHttpUtils {
 
             @Override
             public void onResponse(final Call call, final Response response) {
-                if (call.isCanceled()) {
-                    sendFailResultCallback(call, new IOException("Canceled!"), finalCallback);
-                    return;
-                }
-                if (!response.isSuccessful()) {
-                    try {
-                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
                 try {
+                    if (call.isCanceled()) {
+                        sendFailResultCallback(call, new IOException("Canceled!"), finalCallback);
+                        return;
+                    }
+                    if (!response.isSuccessful()) {
+                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
+                        return;
+                    }
                     sendSuccessResultCallback(finalCallback.parseNetworkResponse(response), finalCallback);
                 } catch (Exception e) {
                     sendFailResultCallback(call, e, finalCallback);
+                } finally {
+                    if (response.body() != null)
+                        response.body().close();
                 }
             }
         });

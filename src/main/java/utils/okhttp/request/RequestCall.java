@@ -22,8 +22,6 @@ public class RequestCall {
     private long writeTimeOut;
     private long connTimeOut;
 
-    private OkHttpClient clone;
-
     public RequestCall(OkHttpRequest request) {
         this.okHttpRequest = request;
     }
@@ -45,22 +43,19 @@ public class RequestCall {
 
     public Call buildCall(Callback callback) {
         request = generateRequest(callback);
-
+        OkHttpClient okHttpClient = OkHttpUtils.getInstance().getOkHttpClient();
         if (readTimeOut > 0 || writeTimeOut > 0 || connTimeOut > 0) {
-            readTimeOut = readTimeOut > 0 ? readTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
-            writeTimeOut = writeTimeOut > 0 ? writeTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
-            connTimeOut = connTimeOut > 0 ? connTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
-
-            clone = OkHttpUtils.getInstance().getOkHttpClient().newBuilder()
+            readTimeOut = readTimeOut > 0 ? readTimeOut : okHttpClient.readTimeoutMillis();
+            writeTimeOut = writeTimeOut > 0 ? writeTimeOut : okHttpClient.writeTimeoutMillis();
+            connTimeOut = connTimeOut > 0 ? connTimeOut : okHttpClient.connectTimeoutMillis();
+            call = okHttpClient.newBuilder()
                     .readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
                     .writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
                     .connectTimeout(connTimeOut, TimeUnit.MILLISECONDS)
-                    .build();
-
-            call = clone.newCall(request);
-        } else {
-            call = OkHttpUtils.getInstance().getOkHttpClient().newCall(request);
-        }
+                    .build()
+                    .newCall(request);
+        } else
+            call = okHttpClient.newCall(request);
         return call;
     }
 
@@ -70,11 +65,8 @@ public class RequestCall {
 
     public void execute(Callback callback) {
         buildCall(callback);
-
-        if (callback != null) {
+        if (callback != null)
             callback.onBefore(request);
-        }
-
         OkHttpUtils.getInstance().execute(this, callback);
     }
 
@@ -98,8 +90,7 @@ public class RequestCall {
     }
 
     public void cancel() {
-        if (call != null) {
+        if (call != null)
             call.cancel();
-        }
     }
 }

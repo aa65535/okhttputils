@@ -18,10 +18,12 @@ import utils.okhttp.builder.PostFormBuilder;
 import utils.okhttp.callback.Callback;
 
 public class PostFormRequest extends OkHttpRequest {
+    protected Map<String, String> params;
     private List<PostFormBuilder.FileInput> files;
 
     public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files) {
-        super(url, tag, params, headers);
+        super(url, tag, headers);
+        this.params = params;
         this.files = files;
     }
 
@@ -32,8 +34,7 @@ public class PostFormRequest extends OkHttpRequest {
             addParams(builder);
             return builder.build();
         } else {
-            MultipartBody.Builder builder = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM);
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
             addParams(builder);
 
             for (int i = 0; i < files.size(); i++) {
@@ -49,6 +50,7 @@ public class PostFormRequest extends OkHttpRequest {
     protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
         if (callback == null)
             return requestBody;
+
         return new CountingRequestBody(requestBody, new CountingRequestBody.Listener() {
             @Override
             public void onRequestProgress(final long bytesWritten, final long contentLength) {
@@ -75,26 +77,21 @@ public class PostFormRequest extends OkHttpRequest {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (contentTypeFor == null) {
+        if (contentTypeFor == null)
             contentTypeFor = "application/octet-stream";
-        }
         return contentTypeFor;
     }
 
     private void addParams(MultipartBody.Builder builder) {
-        if (params != null && !params.isEmpty()) {
-            for (String key : params.keySet()) {
+        if (params != null && !params.isEmpty())
+            for (String key : params.keySet())
                 builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + key + "\""),
                         RequestBody.create(null, params.get(key)));
-            }
-        }
     }
 
     private void addParams(FormBody.Builder builder) {
-        if (params != null) {
-            for (String key : params.keySet()) {
+        if (params != null)
+            for (String key : params.keySet())
                 builder.add(key, params.get(key));
-            }
-        }
     }
 }

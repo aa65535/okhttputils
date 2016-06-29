@@ -55,6 +55,7 @@ public abstract class FileCallBack extends Callback<File> {
             });
             File dir = new File(destFileDir);
             if (!dir.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 dir.mkdirs();
             }
             File file = new File(dir, destFileName);

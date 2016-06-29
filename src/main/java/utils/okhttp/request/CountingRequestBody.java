@@ -18,9 +18,8 @@ import okio.Sink;
  * @author Leo Nikkilä
  */
 public class CountingRequestBody extends RequestBody {
-    protected RequestBody delegate;
     protected Listener listener;
-
+    protected RequestBody delegate;
     protected CountingSink countingSink;
 
     public CountingRequestBody(RequestBody delegate, Listener listener) {

@@ -28,11 +28,10 @@ public class HttpsUtils {
             KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             SSLContext sslContext = SSLContext.getInstance("TLS");
             X509TrustManager trustManager;
-            if (trustManagers != null) {
+            if (trustManagers != null)
                 trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
-            } else {
+            else
                 trustManager = new UnSafeTrustManager();
-            }
             sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
             sslParams.sslSocketFactory = sslContext.getSocketFactory();
             sslParams.trustManager = trustManager;
@@ -45,6 +44,7 @@ public class HttpsUtils {
     private static TrustManager[] prepareTrustManager(InputStream... certificates) {
         if (certificates == null || certificates.length <= 0)
             return null;
+
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -59,10 +59,7 @@ public class HttpsUtils {
                 } catch (IOException ignored) {
                 }
             }
-            TrustManagerFactory trustManagerFactory = null;
-
-            trustManagerFactory = TrustManagerFactory.
-                    getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);
 
             return trustManagerFactory.getTrustManagers();
@@ -81,6 +78,7 @@ public class HttpsUtils {
             clientKeyStore.load(bksFile, password.toCharArray());
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(clientKeyStore, password.toCharArray());
+
             return keyManagerFactory.getKeyManagers();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,11 +87,9 @@ public class HttpsUtils {
     }
 
     private static X509TrustManager chooseTrustManager(TrustManager[] trustManagers) {
-        for (TrustManager trustManager : trustManagers) {
-            if (trustManager instanceof X509TrustManager) {
+        for (TrustManager trustManager : trustManagers)
+            if (trustManager instanceof X509TrustManager)
                 return (X509TrustManager) trustManager;
-            }
-        }
         return null;
     }
 

@@ -12,18 +12,16 @@ public class PostStringRequest extends OkHttpRequest {
     private String content;
     private MediaType mediaType;
 
-    public PostStringRequest(String url, Object tag, Map<String, String> params,
-                             Map<String, String> headers, String content, MediaType mediaType) {
-        super(url, tag, params, headers);
+    public PostStringRequest(String url, Object tag, Map<String, String> headers, String content, MediaType mediaType) {
+        super(url, tag, headers);
         this.content = content;
         this.mediaType = mediaType;
 
-        if (this.content == null) {
+        if (this.content == null)
             throw new IllegalArgumentException("the content can not be null !");
-        }
-        if (this.mediaType == null) {
+
+        if (this.mediaType == null)
             this.mediaType = MEDIA_TYPE_PLAIN;
-        }
     }
 
     @Override

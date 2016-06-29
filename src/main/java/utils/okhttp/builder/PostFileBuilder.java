@@ -22,6 +22,6 @@ public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder> {
 
     @Override
     public RequestCall build() {
-        return new PostFileRequest(url, tag, params, headers, file, mediaType).build();
+        return new PostFileRequest(url, tag, headers, file, mediaType).build();
     }
 }
