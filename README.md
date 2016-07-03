@@ -1,18 +1,18 @@
 #OkHttpUtils
 
-A Java utils library for [OkHttp][0]. For more information see the [wiki][1].
+A Java utils library for [OkHttp][0]. For more information see the [Wiki][1].
 
-[ ![Download][4] ][3]
+[ ![Download][3] ][2]
 
-#Download
+#Binaries
 
-Download the [latest JAR][2] or grab via Gradle:
+Gradle:
 
 ```
 compile 'utils.okhttp:okhttputils:2.0.1'
 ```
 
-or Maven:
+Maven:
 
 ```
 <dependency>
@@ -23,7 +23,7 @@ or Maven:
 </dependency>
 ```
 
-or Ivy:
+Ivy:
 
 ```
 <dependency org='utils.okhttp' name='okhttputils' rev='2.0.1'>
@@ -71,6 +71,5 @@ limitations under the License.
 
 [0]: https://github.com/square/okhttp
 [1]: https://github.com/aa65535/okhttputils/wiki
-[2]: https://github.com/aa65535/okhttputils/releases
-[3]: https://bintray.com/aa65535/maven/okhttputils/_latestVersion
-[4]: https://api.bintray.com/packages/aa65535/maven/okhttputils/images/download.svg
+[2]: https://bintray.com/aa65535/maven/okhttputils/_latestVersion
+[3]: https://api.bintray.com/packages/aa65535/maven/okhttputils/images/download.svg
