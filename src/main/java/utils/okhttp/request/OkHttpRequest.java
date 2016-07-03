@@ -95,7 +95,7 @@ public abstract class OkHttpRequest {
     }
 
     /**
-     * 执行同步请求，并返回 {@link Response} 对象
+     * 执行同步网络请求，并返回 {@link Response} 对象
      *
      * @throws IOException
      */
@@ -104,13 +104,13 @@ public abstract class OkHttpRequest {
     }
 
     /**
-     * 执行异步请求，期间会调用 {@link #callback} 的相关方法
+     * 执行异步网络请求，期间会调用 {@link #callback} 的相关方法
      */
     public void execute() {
         if (call.isExecuted())
             throw new IllegalStateException("Already Executed");
         callback.onBefore(request());
-        OkHttpUtils.getInstance().execute(call, callback);
+        execute(call, callback);
     }
 
     /**
@@ -118,5 +118,58 @@ public abstract class OkHttpRequest {
      */
     public void cancel() {
         call.cancel();
+    }
+
+    private static void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
+        OkHttpUtils.getInstance().getThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onError(call, e);
+                callback.onAfter();
+            }
+        });
+    }
+
+    private static <T> void sendSuccessResultCallback(final T object, final Callback<T> callback) {
+        OkHttpUtils.getInstance().getThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    callback.onResponse(object);
+                    callback.onAfter();
+                } catch (Exception e) {
+                    sendFailResultCallback(null, e, callback);
+                }
+            }
+        });
+    }
+
+    private static void execute(Call call, final Callback callback) {
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                sendFailResultCallback(call, e, callback);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) {
+                try {
+                    if (call.isCanceled()) {
+                        sendFailResultCallback(call, new IOException("Canceled!"), callback);
+                        return;
+                    }
+                    if (!response.isSuccessful()) {
+                        sendFailResultCallback(call, new RuntimeException(response.body().string()), callback);
+                        return;
+                    }
+                    sendSuccessResultCallback(callback.parseNetworkResponse(response), callback);
+                } catch (Exception e) {
+                    sendFailResultCallback(call, e, callback);
+                } finally {
+                    if (response.body() != null)
+                        response.body().close();
+                }
+            }
+        });
     }
 }

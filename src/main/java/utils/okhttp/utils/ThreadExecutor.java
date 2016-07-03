@@ -13,12 +13,11 @@ public class ThreadExecutor {
     }
 
     /**
-     * 获取一个线程池，会尝试创建 Android 下的 UI 线程执行器
+     * 获取一个线程池，会尝试创建 Android 下的 UI 池线程
      * 如果失败则创建一个普通的 Java 线程池
      */
     private static Executor findExecutors() {
         try {
-            Class.forName("android.os.Handler");
             return new AndroidThreadExecutor();
         } catch (Exception ignored) {
         }
@@ -30,7 +29,7 @@ public class ThreadExecutor {
     }
 
     /**
-     * Android 下的 UI 线程执行器
+     * Android 下的 UI 池线程
      */
     static class AndroidThreadExecutor implements Executor {
         private final Object handler;
