@@ -32,7 +32,7 @@ or Ivy:
 #ProGuard
 
 ```
-#okhttputils
+#OkHttpUtils
 -keep class utils.okhttp.**{ *; }
 -keep interface utils.okhttp.** { *; }
 -dontwarn utils.okhttp.**

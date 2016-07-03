@@ -59,7 +59,7 @@ publishing {
 
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', 'A utils of okhttp')
+                root.appendNode('description', 'A Java utils library for Okhttp')
                 root.children().last() + pomConfig
             }
         }
@@ -79,7 +79,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'okhttputils'
-        desc = 'A utils of okhttp'
+        desc = 'A Java utils library for Okhttp'
         websiteUrl = 'https://github.com/aa65535/okhttputils'
         issueTrackerUrl = 'https://github.com/aa65535/okhttputils/issues'
         vcsUrl = 'https://github.com/aa65535/okhttputils.git'
