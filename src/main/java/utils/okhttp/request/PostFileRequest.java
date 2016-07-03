@@ -1,30 +1,25 @@
 package utils.okhttp.request;
 
 import java.io.File;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import utils.okhttp.OkHttpUtils;
-import utils.okhttp.callback.Callback;
 
 public class PostFileRequest extends OkHttpRequest {
-    private static MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
+    File file;
+    MediaType mediaType;
 
-    private File file;
-    private MediaType mediaType;
+    PostFileRequest(PostFileBuilder builder) {
+        super(builder);
+        this.file = builder.file;
+        this.mediaType = builder.mediaType;
+    }
 
-    public PostFileRequest(String url, Object tag, Map<String, String> headers, File file, MediaType mediaType) {
-        super(url, tag, headers);
-        this.file = file;
-        this.mediaType = mediaType;
-
-        if (this.file == null)
-            throw new IllegalArgumentException("the file can not be null !");
-
-        if (this.mediaType == null)
-            this.mediaType = MEDIA_TYPE_STREAM;
+    @Override
+    public PostFileBuilder newBuilder() {
+        return new PostFileBuilder(this);
     }
 
     @Override
@@ -33,7 +28,7 @@ public class PostFileRequest extends OkHttpRequest {
     }
 
     @Override
-    protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
+    protected RequestBody wrapRequestBody(RequestBody requestBody) {
         if (callback == null)
             return requestBody;
 

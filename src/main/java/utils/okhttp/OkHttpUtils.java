@@ -6,23 +6,22 @@ import okhttp3.Call;
 import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import utils.okhttp.builder.GetBuilder;
-import utils.okhttp.builder.HeadBuilder;
-import utils.okhttp.builder.OtherRequestBuilder;
-import utils.okhttp.builder.PostFileBuilder;
-import utils.okhttp.builder.PostFormBuilder;
-import utils.okhttp.builder.PostStringBuilder;
 import utils.okhttp.callback.Callback;
 import utils.okhttp.cookie.CookieJarImpl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
 import utils.okhttp.cookie.store.MemoryCookieStore;
-import utils.okhttp.request.RequestCall;
+import utils.okhttp.request.GetBuilder;
+import utils.okhttp.request.HeadBuilder;
+import utils.okhttp.request.OtherBuilder;
+import utils.okhttp.request.PostFileBuilder;
+import utils.okhttp.request.PostFormBuilder;
+import utils.okhttp.request.PostStringBuilder;
+import utils.okhttp.utils.Method;
 import utils.okhttp.utils.ThreadExecutor;
 
 @SuppressWarnings("unused")
 public class OkHttpUtils {
-    public static final long DEFAULT_MILLISECONDS = 10_000;
     private OkHttpClient mOkHttpClient;
     private final ThreadExecutor mThreadExecutor;
     private volatile static OkHttpUtils mInstance;
@@ -71,16 +70,16 @@ public class OkHttpUtils {
         return new HeadBuilder();
     }
 
-    public static OtherRequestBuilder put() {
-        return new OtherRequestBuilder(METHOD.PUT);
+    public static OtherBuilder put() {
+        return new OtherBuilder(Method.PUT);
     }
 
-    public static OtherRequestBuilder delete() {
-        return new OtherRequestBuilder(METHOD.DELETE);
+    public static OtherBuilder delete() {
+        return new OtherBuilder(Method.DELETE);
     }
 
-    public static OtherRequestBuilder patch() {
-        return new OtherRequestBuilder(METHOD.PATCH);
+    public static OtherBuilder patch() {
+        return new OtherBuilder(Method.PATCH);
     }
 
     public OkHttpClient getOkHttpClient() {
@@ -94,7 +93,7 @@ public class OkHttpUtils {
     public CookieStore getCookieStore() {
         final CookieJar cookieJar = mOkHttpClient.cookieJar();
         if (cookieJar == null)
-            throw new IllegalArgumentException("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
+            throw new IllegalStateException("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
         if (cookieJar instanceof HasCookieStore)
             return ((HasCookieStore) cookieJar).getCookieStore();
         return null;
@@ -140,44 +139,32 @@ public class OkHttpUtils {
                 call.cancel();
     }
 
-    public void execute(final RequestCall requestCall, Callback<?> callback) {
-        if (callback == null)
-            callback = Callback.CALLBACK_DEFAULT;
-
-        final Callback finalCallback = callback;
-
-        requestCall.getCall().enqueue(new okhttp3.Callback() {
+    public void execute(Call call, final Callback callback) {
+        call.enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
-                sendFailResultCallback(call, e, finalCallback);
+                sendFailResultCallback(call, e, callback);
             }
 
             @Override
             public void onResponse(final Call call, final Response response) {
                 try {
                     if (call.isCanceled()) {
-                        sendFailResultCallback(call, new IOException("Canceled!"), finalCallback);
+                        sendFailResultCallback(call, new IOException("Canceled!"), callback);
                         return;
                     }
                     if (!response.isSuccessful()) {
-                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
+                        sendFailResultCallback(call, new RuntimeException(response.body().string()), callback);
                         return;
                     }
-                    sendSuccessResultCallback(finalCallback.parseNetworkResponse(response), finalCallback);
+                    sendSuccessResultCallback(callback.parseNetworkResponse(response), callback);
                 } catch (Exception e) {
-                    sendFailResultCallback(call, e, finalCallback);
+                    sendFailResultCallback(call, e, callback);
                 } finally {
                     if (response.body() != null)
                         response.body().close();
                 }
             }
         });
-    }
-
-    public interface METHOD {
-        String HEAD = "HEAD";
-        String DELETE = "DELETE";
-        String PUT = "PUT";
-        String PATCH = "PATCH";
     }
 }

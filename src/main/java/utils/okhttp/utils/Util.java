@@ -3,16 +3,12 @@ package utils.okhttp.utils;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * 工具类
- * Created by Jian Chang on 2016-06-29.
- */
 public final class Util {
     public static boolean isEmpty(Object object) {
         if (null == object)
             return true;
         if (object instanceof Number)
-            return 0 == ((Number) object).intValue();
+            return 0 == ((Number) object).doubleValue();
         if (object instanceof Collection)
             return ((Collection) object).isEmpty();
         if (object instanceof Map)

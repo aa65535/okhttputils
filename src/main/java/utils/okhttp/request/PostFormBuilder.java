@@ -1,19 +1,26 @@
-package utils.okhttp.builder;
+package utils.okhttp.request;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import utils.okhttp.request.PostFormRequest;
-import utils.okhttp.request.RequestCall;
-
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
-    private List<FileInput> files = new ArrayList<>();
+    List<FileInput> files;
+
+    public PostFormBuilder() {
+        files = new ArrayList<>();
+    }
+
+    PostFormBuilder(PostFormRequest request) {
+        super(request);
+        this.params = request.params;
+        this.files = request.files;
+    }
 
     @Override
-    public RequestCall build() {
-        return new PostFormRequest(url, tag, params, headers, files).build();
+    public PostFormRequest build() {
+        return new PostFormRequest(this);
     }
 
     public PostFormBuilder files(String key, Map<String, File> files) {

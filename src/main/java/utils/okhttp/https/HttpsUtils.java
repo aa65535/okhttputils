@@ -37,7 +37,7 @@ public class HttpsUtils {
             sslParams.trustManager = trustManager;
             return sslParams;
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-            throw new AssertionError(e);
+            throw new RuntimeException(e);
         }
     }
 

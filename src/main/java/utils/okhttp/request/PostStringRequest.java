@@ -1,27 +1,22 @@
 package utils.okhttp.request;
 
-import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class PostStringRequest extends OkHttpRequest {
-    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+    String content;
+    MediaType mediaType;
 
-    private String content;
-    private MediaType mediaType;
+    PostStringRequest(PostStringBuilder builder) {
+        super(builder);
+        this.content = builder.content;
+        this.mediaType = builder.mediaType;
+    }
 
-    public PostStringRequest(String url, Object tag, Map<String, String> headers, String content, MediaType mediaType) {
-        super(url, tag, headers);
-        this.content = content;
-        this.mediaType = mediaType;
-
-        if (this.content == null)
-            throw new IllegalArgumentException("the content can not be null !");
-
-        if (this.mediaType == null)
-            this.mediaType = MEDIA_TYPE_PLAIN;
+    @Override
+    public PostStringBuilder newBuilder() {
+        return new PostStringBuilder(this);
     }
 
     @Override

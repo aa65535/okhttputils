@@ -14,17 +14,22 @@ import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import utils.okhttp.OkHttpUtils;
-import utils.okhttp.builder.PostFormBuilder;
-import utils.okhttp.callback.Callback;
+import utils.okhttp.request.PostFormBuilder.FileInput;
+import utils.okhttp.utils.Constants;
 
 public class PostFormRequest extends OkHttpRequest {
-    protected Map<String, String> params;
-    private List<PostFormBuilder.FileInput> files;
+    volatile Map<String, String> params;
+    List<FileInput> files;
 
-    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files) {
-        super(url, tag, headers);
-        this.params = params;
-        this.files = files;
+    PostFormRequest(PostFormBuilder builder) {
+        super(builder);
+        this.params = builder.params;
+        this.files = builder.files;
+    }
+
+    @Override
+    public PostFormBuilder newBuilder() {
+        return new PostFormBuilder(this);
     }
 
     @Override
@@ -36,18 +41,16 @@ public class PostFormRequest extends OkHttpRequest {
         } else {
             MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
             addParams(builder);
-
-            for (int i = 0; i < files.size(); i++) {
-                PostFormBuilder.FileInput fileInput = files.get(i);
-                RequestBody fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileInput.filename)), fileInput.file);
-                builder.addFormDataPart(fileInput.key, fileInput.filename, fileBody);
+            for (FileInput input : files) {
+                RequestBody fileBody = RequestBody.create(guessMimeType(input.filename), input.file);
+                builder.addFormDataPart(input.key, input.filename, fileBody);
             }
             return builder.build();
         }
     }
 
     @Override
-    protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
+    protected RequestBody wrapRequestBody(RequestBody requestBody) {
         if (callback == null)
             return requestBody;
 
@@ -69,17 +72,14 @@ public class PostFormRequest extends OkHttpRequest {
         return builder.post(requestBody).build();
     }
 
-    private String guessMimeType(String path) {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String contentTypeFor = null;
+    private MediaType guessMimeType(String path) {
         try {
-            contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(path, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            FileNameMap fileNameMap = URLConnection.getFileNameMap();
+            String contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(path, "UTF-8"));
+            return MediaType.parse(contentTypeFor);
+        } catch (UnsupportedEncodingException ignored) {
         }
-        if (contentTypeFor == null)
-            contentTypeFor = "application/octet-stream";
-        return contentTypeFor;
+        return Constants.MEDIA_TYPE_STREAM;
     }
 
     private void addParams(MultipartBody.Builder builder) {

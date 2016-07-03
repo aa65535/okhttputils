@@ -9,13 +9,7 @@ import okhttp3.Response;
 import utils.okhttp.OkHttpUtils;
 
 public abstract class FileCallBack extends Callback<File> {
-    /**
-     * 目标文件存储的文件夹路径
-     */
     private String destFileDir;
-    /**
-     * 目标文件存储的文件名
-     */
     private String destFileName;
 
     public FileCallBack(String destFileDir, String destFileName) {
