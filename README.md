@@ -2,6 +2,8 @@
 
 A Java utils library for [OkHttp][0]. For more information see the [wiki][1].
 
+[ ![Download][4] ][3]
+
 #Download
 
 Download the [latest JAR][2] or grab via Gradle:
@@ -70,3 +72,5 @@ limitations under the License.
 [0]: https://github.com/square/okhttp
 [1]: https://github.com/aa65535/okhttputils/wiki
 [2]: https://github.com/aa65535/okhttputils/releases
+[3]: https://bintray.com/aa65535/maven/okhttputils/_latestVersion
+[4]: https://api.bintray.com/packages/aa65535/maven/okhttputils/images/download.svg
