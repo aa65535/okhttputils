@@ -24,11 +24,17 @@ public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implemen
         return new PostStringRequest(this);
     }
 
+    /**
+     * 设置待提交的字符串
+     */
     public PostStringBuilder content(String content) {
         this.content = content;
         return this;
     }
 
+    /**
+     * 设置请求的 {@link MediaType}，默认是 {@code text/plain;charset=utf-8}
+     */
     public PostStringBuilder mediaType(MediaType mediaType) {
         this.mediaType = mediaType;
         return this;

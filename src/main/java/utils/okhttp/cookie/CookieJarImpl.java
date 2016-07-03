@@ -8,6 +8,9 @@ import okhttp3.HttpUrl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
 
+/**
+ * 对 {@link CookieJar} 的包装
+ */
 public class CookieJarImpl implements CookieJar, HasCookieStore {
     private CookieStore cookieStore;
 

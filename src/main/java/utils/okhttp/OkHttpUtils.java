@@ -22,7 +22,7 @@ import utils.okhttp.utils.ThreadExecutor;
 
 @SuppressWarnings("unused")
 public class OkHttpUtils {
-    private OkHttpClient mOkHttpClient;
+    private final OkHttpClient mOkHttpClient;
     private final ThreadExecutor mThreadExecutor;
     private volatile static OkHttpUtils mInstance;
 
@@ -37,6 +37,9 @@ public class OkHttpUtils {
         mThreadExecutor = new ThreadExecutor();
     }
 
+    /**
+     * 初始化 {@link OkHttpClient} 对象，需要在 {@link #getInstance} 调用之前执行
+     */
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
         if (null != mInstance)
             throw new IllegalStateException("Instance already exist, it can not be created again.");
@@ -44,52 +47,110 @@ public class OkHttpUtils {
         return mInstance;
     }
 
+    /**
+     * 获取一个 OkHttpUtils 实例
+     */
     public synchronized static OkHttpUtils getInstance() {
         if (mInstance == null)
             mInstance = new OkHttpUtils(null);
         return mInstance;
     }
 
+    /**
+     * 使用 GET 请求
+     *
+     * @return {@link GetBuilder} 对象
+     */
     public static GetBuilder get() {
         return new GetBuilder();
     }
 
+    /**
+     * 使用 POST Form 请求
+     *
+     * @return {@link PostFormBuilder} 对象
+     */
     public static PostFormBuilder post() {
         return new PostFormBuilder();
     }
 
+    /**
+     * 使用 POST File 请求
+     *
+     * @return {@link PostFileBuilder} 对象
+     */
     public static PostFileBuilder postFile() {
         return new PostFileBuilder();
     }
 
+    /**
+     * 使用 POST String 请求
+     *
+     * @return {@link PostStringBuilder} 对象
+     */
     public static PostStringBuilder postString() {
         return new PostStringBuilder();
     }
 
+    /**
+     * 使用 HEAD 请求
+     *
+     * @return {@link HeadBuilder} 对象
+     */
     public static HeadBuilder head() {
         return new HeadBuilder();
     }
 
+    /**
+     * 使用 PUT 请求
+     *
+     * @return {@link OtherBuilder} 对象
+     */
     public static OtherBuilder put() {
         return new OtherBuilder(Method.PUT);
     }
 
+    /**
+     * 使用 DELETE 请求
+     *
+     * @return {@link OtherBuilder} 对象
+     */
     public static OtherBuilder delete() {
         return new OtherBuilder(Method.DELETE);
     }
 
+    /**
+     * 使用 PATCH 请求
+     *
+     * @return {@link OtherBuilder} 对象
+     */
     public static OtherBuilder patch() {
         return new OtherBuilder(Method.PATCH);
     }
 
+    /**
+     * 获取已经初始化的 {@link OkHttpClient} 对象
+     *
+     * @return {@link OkHttpClient} 对象
+     */
     public OkHttpClient getOkHttpClient() {
         return mOkHttpClient;
     }
 
+    /**
+     * 获取线程池对象
+     *
+     * @return {@link ThreadExecutor} 对象
+     */
     public synchronized ThreadExecutor getThreadExecutor() {
         return mThreadExecutor;
     }
 
+    /**
+     * 获取 {@link OkHttpClient.Builder#cookieJar} 方法中传入的的 {@link CookieStore} 对象
+     *
+     * @return {@link CookieStore} 对象
+     */
     public CookieStore getCookieStore() {
         final CookieJar cookieJar = mOkHttpClient.cookieJar();
         if (cookieJar == null)
@@ -99,11 +160,8 @@ public class OkHttpUtils {
         return null;
     }
 
-    public void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
-        if (callback == null)
-            return;
-
-        getThreadExecutor().execute(new Runnable() {
+    private void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
+        mThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 callback.onError(call, e);
@@ -112,11 +170,8 @@ public class OkHttpUtils {
         });
     }
 
-    public <T> void sendSuccessResultCallback(final T object, final Callback<T> callback) {
-        if (callback == null)
-            return;
-
-        getThreadExecutor().execute(new Runnable() {
+    private <T> void sendSuccessResultCallback(final T object, final Callback<T> callback) {
+        mThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -129,6 +184,9 @@ public class OkHttpUtils {
         });
     }
 
+    /**
+     * 根据设置的 TAG 取消相应的网络请求
+     */
     public void cancelTag(Object tag) {
         for (Call call : mOkHttpClient.dispatcher().queuedCalls())
             if (tag.equals(call.request().tag()))
@@ -139,6 +197,12 @@ public class OkHttpUtils {
                 call.cancel();
     }
 
+    /**
+     * 执行网络请求
+     *
+     * @param call     {@link Call} 对象
+     * @param callback {@link Callback} 对象
+     */
     public void execute(Call call, final Callback callback) {
         call.enqueue(new okhttp3.Callback() {
             @Override

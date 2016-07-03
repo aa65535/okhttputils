@@ -20,8 +20,21 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+/**
+ * Https 证书工具类
+ */
 public class HttpsUtils {
-    public static SSLParams getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String password) {
+    /**
+     * 获取一个 {@link SSLParams} 对象， 其中包含 {@link SSLSocketFactory} 对象 和 {@link X509TrustManager} 对象
+     * <br/>设置可访问所有的 https 网站时可以全部参数都传入 {@code null}
+     * <br/>设置具体的证书 则可以在 {@code certificates} 参数传入对应证书的 {@link InputStream} 对象
+     * <br/>设置双向认证则需要传入三个参数
+     *
+     * @param certificates 证书的 {@link InputStream} 数组对象
+     * @param bksFile      本地证书的 {@link InputStream} 对象
+     * @param password     本地证书的密码
+     */
+    public static SSLParams getSSLParams(InputStream[] certificates, InputStream bksFile, String password) {
         SSLParams sslParams = new SSLParams();
         try {
             TrustManager[] trustManagers = prepareTrustManager(certificates);
@@ -98,6 +111,13 @@ public class HttpsUtils {
         public X509TrustManager trustManager;
     }
 
+    public static class UnSafeHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+
     private static class UnSafeTrustManager implements X509TrustManager {
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType)
@@ -142,13 +162,6 @@ public class HttpsUtils {
         @Override
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];
-        }
-    }
-
-    public static class UnSafeHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return true;
         }
     }
 }

@@ -43,7 +43,7 @@ public class PostFormRequest extends OkHttpRequest {
             addParams(builder);
             for (FileInput input : files) {
                 RequestBody fileBody = RequestBody.create(guessMimeType(input.filename), input.file);
-                builder.addFormDataPart(input.key, input.filename, fileBody);
+                builder.addFormDataPart(input.name, input.filename, fileBody);
             }
             return builder.build();
         }

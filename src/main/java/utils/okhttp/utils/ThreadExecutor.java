@@ -12,11 +12,15 @@ public class ThreadExecutor {
         executor = findExecutors();
     }
 
+    /**
+     * 获取一个线程池，会尝试创建 Android 下的 UI 线程执行器
+     * 如果失败则创建一个普通的 Java 线程池
+     */
     private static Executor findExecutors() {
         try {
             Class.forName("android.os.Handler");
             return new AndroidThreadExecutor();
-        } catch (ClassNotFoundException ignored) {
+        } catch (Exception ignored) {
         }
         return Executors.newCachedThreadPool();
     }
@@ -25,22 +29,21 @@ public class ThreadExecutor {
         executor.execute(runnable);
     }
 
+    /**
+     * Android 下的 UI 线程执行器
+     */
     static class AndroidThreadExecutor implements Executor {
         private final Object handler;
         private final Method postMethod;
 
-        public AndroidThreadExecutor() {
-            try {
-                Class<?> looperClass = Class.forName("android.os.Looper");
-                Class<?> handlerClass = Class.forName("android.os.Handler");
-                Method getMainLooperMethod = looperClass.getDeclaredMethod("getMainLooper");
-                Object looper = getMainLooperMethod.invoke(null);
-                Constructor<?> handlerConstructor = handlerClass.getConstructor(looperClass);
-                handler = handlerConstructor.newInstance(looper);
-                postMethod = handlerClass.getDeclaredMethod("post", Runnable.class);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        public AndroidThreadExecutor() throws Exception {
+            Class<?> looperClass = Class.forName("android.os.Looper");
+            Class<?> handlerClass = Class.forName("android.os.Handler");
+            Method getMainLooperMethod = looperClass.getDeclaredMethod("getMainLooper");
+            Object looper = getMainLooperMethod.invoke(null);
+            Constructor<?> handlerConstructor = handlerClass.getConstructor(looperClass);
+            handler = handlerConstructor.newInstance(looper);
+            postMethod = handlerClass.getDeclaredMethod("post", Runnable.class);
         }
 
         @Override

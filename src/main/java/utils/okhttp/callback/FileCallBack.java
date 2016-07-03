@@ -9,30 +9,38 @@ import okhttp3.Response;
 import utils.okhttp.OkHttpUtils;
 
 public abstract class FileCallBack extends Callback<File> {
-    private String destFileDir;
-    private String destFileName;
+    private File destFileDir;
+    private String fileName;
 
-    public FileCallBack(String destFileDir, String destFileName) {
+    /**
+     * @param destFileDir 文件保存的目录
+     * @param fileName    文件名
+     */
+    public FileCallBack(File destFileDir, String fileName) {
         this.destFileDir = destFileDir;
-        this.destFileName = destFileName;
+        this.fileName = fileName;
     }
 
     /**
-     * UI Thread
+     * @param destFileDir 文件保存的目录
+     * @param fileName    文件名
+     */
+    public FileCallBack(String destFileDir, String fileName) {
+        this.destFileDir = new File(destFileDir);
+        this.fileName = fileName;
+    }
+
+    /**
+     * 当获取文件体积时调用，Android 下使用 UI 线程
+     *
+     * @param size 文件的体积
      */
     public abstract void onGetFileSize(long size);
 
-    /**
-     * UI Thread
-     */
     public abstract void inProgress(long progress, long size);
 
     @Override
     public File parseNetworkResponse(Response response) throws Exception {
-        return saveFile(response);
-    }
-
-    public File saveFile(Response response) throws IOException {
         InputStream is = null;
         byte[] buf = new byte[2048];
         int len;
@@ -47,12 +55,11 @@ public abstract class FileCallBack extends Callback<File> {
                     onGetFileSize(total);
                 }
             });
-            File dir = new File(destFileDir);
-            if (!dir.exists()) {
+            if (!destFileDir.exists()) {
                 //noinspection ResultOfMethodCallIgnored
-                dir.mkdirs();
+                destFileDir.mkdirs();
             }
-            File file = new File(dir, destFileName);
+            File file = new File(destFileDir, fileName);
             fos = new FileOutputStream(file);
             while ((len = is.read(buf)) != -1) {
                 sum += len;

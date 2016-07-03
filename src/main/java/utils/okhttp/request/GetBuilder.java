@@ -46,11 +46,17 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
         return this;
     }
 
+    /**
+     * 设置指定 {@code name} 的请求参数值
+     */
     public GetBuilder setParam(String name, Object value) {
         httpUrlBuilder.setQueryParameter(name, null == value ? null : value.toString());
         return this;
     }
 
+    /**
+     * 添加请求参数， {@code value} 为 {@code null} 时添加空字符串
+     */
     @Override
     public GetBuilder addParam(String name, Object value) {
         return addNullableParam(name, value);
@@ -76,6 +82,9 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
         httpUrlBuilder.addQueryParameter(name, value.toString());
     }
 
+    /**
+     * 获取请求的最终 URL
+     */
     protected String getUrl() {
         return httpUrlBuilder.toString();
     }

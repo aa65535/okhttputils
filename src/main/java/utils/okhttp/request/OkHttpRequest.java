@@ -19,9 +19,9 @@ public abstract class OkHttpRequest {
     Builder headers;
     Callback callback;
 
-    long readTimeOut;
-    long writeTimeOut;
     long connTimeOut;
+    long writeTimeOut;
+    long readTimeOut;
 
     protected Call call;
     protected Request.Builder builder;
@@ -31,13 +31,16 @@ public abstract class OkHttpRequest {
         this.tag = builder.tag;
         this.headers = builder.headers;
         this.callback = builder.callback;
-        this.readTimeOut = builder.readTimeOut;
-        this.writeTimeOut = builder.writeTimeOut;
         this.connTimeOut = builder.connTimeOut;
+        this.writeTimeOut = builder.writeTimeOut;
+        this.readTimeOut = builder.readTimeOut;
         this.call = buildCall();
         this.builder = new Request.Builder().url(url).tag(tag).headers(headers.build());
     }
 
+    /**
+     * 根据当前实例创建一个 {@link OkHttpBuilder} 对象
+     */
     public abstract OkHttpBuilder newBuilder();
 
     protected abstract RequestBody buildRequestBody();
@@ -56,36 +59,53 @@ public abstract class OkHttpRequest {
 
     protected Call buildCall() {
         OkHttpClient okHttpClient = OkHttpUtils.getInstance().getOkHttpClient();
-        if (readTimeOut > 0 || writeTimeOut > 0 || connTimeOut > 0) {
-            readTimeOut = readTimeOut > 0 ? readTimeOut : okHttpClient.readTimeoutMillis();
-            writeTimeOut = writeTimeOut > 0 ? writeTimeOut : okHttpClient.writeTimeoutMillis();
+        if (connTimeOut > 0 || writeTimeOut > 0 || readTimeOut > 0) {
             connTimeOut = connTimeOut > 0 ? connTimeOut : okHttpClient.connectTimeoutMillis();
+            writeTimeOut = writeTimeOut > 0 ? writeTimeOut : okHttpClient.writeTimeoutMillis();
+            readTimeOut = readTimeOut > 0 ? readTimeOut : okHttpClient.readTimeoutMillis();
             return okHttpClient.newBuilder()
-                    .readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
-                    .writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
                     .connectTimeout(connTimeOut, TimeUnit.MILLISECONDS)
+                    .writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
+                    .readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
                     .build()
                     .newCall(generateRequest());
         } else
             return okHttpClient.newCall(generateRequest());
     }
 
+    /**
+     * 返回当前实例的 {@link #call} 对象
+     */
     public Call call() {
         return call;
     }
 
+    /**
+     * 返回当前实例的 {@link #callback} 对象
+     */
     public Callback callback() {
         return callback;
     }
 
+    /**
+     * 返回当前实例的 {@link Request} 对象
+     */
     public Request request() {
         return call.request();
     }
 
+    /**
+     * 执行同步请求，并返回 {@link Response} 对象
+     *
+     * @throws IOException
+     */
     public Response response() throws IOException {
         return call.execute();
     }
 
+    /**
+     * 执行异步请求，期间会调用 {@link #callback} 的相关方法
+     */
     public void execute() {
         if (call.isExecuted())
             throw new IllegalStateException("Already Executed");
@@ -93,6 +113,9 @@ public abstract class OkHttpRequest {
         OkHttpUtils.getInstance().execute(call, callback);
     }
 
+    /**
+     * 取消本次请求
+     */
     public void cancel() {
         call.cancel();
     }
