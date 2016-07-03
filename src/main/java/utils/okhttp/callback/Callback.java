@@ -51,7 +51,7 @@ public abstract class Callback<T> {
     }
 
     /**
-     * 解析网络请求响应数据的方法，由子类实现返回对应的对象，Android 下使用工作线程
+     * 解析网络请求响应数据的方法，由子类实现返回对应的对象，Android 下使用 Worker 线程
      *
      * @param response Response 实例，包含请求响应内容
      * @return 返回应的泛型类型
@@ -60,12 +60,12 @@ public abstract class Callback<T> {
     public abstract T parseNetworkResponse(Response response) throws Exception;
 
     /**
-     * 当网络请求被取消、连接问题、服务器返回错误码或超时执行时调用，Android 下使用工作线程
+     * 当网络请求被取消、连接问题、服务器返回错误码或超时执行时调用，Android 下使用 UI 线程
      */
     public abstract void onError(Call call, Exception e);
 
     /**
-     * 当网络请求正确响应后执行，Android 下使用工作线程
+     * 当网络请求正确响应后执行，Android 下使用 UI 线程
      *
      * @param t {@link #parseNetworkResponse} 方法返回的对象
      */

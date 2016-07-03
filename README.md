@@ -7,7 +7,7 @@ A Java utils library for [OkHttp][0]. For more information see the [wiki][1].
 Download the [latest JAR][2] or grab via Gradle:
 
 ```
-compile 'utils.okhttp:okhttputils:2.0.0'
+compile 'utils.okhttp:okhttputils:2.0.1'
 ```
 
 or Maven:
@@ -16,7 +16,7 @@ or Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -24,9 +24,31 @@ or Maven:
 or Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='2.0.0'>
+<dependency org='utils.okhttp' name='okhttputils' rev='2.0.1'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
+```
+
+#ProGuard
+
+```
+#okhttputils
+-keep class utils.okhttp.**{ *; }
+-keep interface utils.okhttp.** { *; }
+-dontwarn utils.okhttp.**
+
+# OkHttp
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# Okio
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
 ```
 
 #License
