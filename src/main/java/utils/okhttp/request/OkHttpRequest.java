@@ -23,7 +23,7 @@ public abstract class OkHttpRequest {
     protected long readTimeOut;
 
     protected Call call;
-    protected Request.Builder builder;
+    protected final Request.Builder builder;
 
     protected OkHttpRequest(OkHttpBuilder builder) {
         this.url = builder.url;
@@ -34,7 +34,6 @@ public abstract class OkHttpRequest {
         this.writeTimeOut = builder.writeTimeOut;
         this.readTimeOut = builder.readTimeOut;
         this.builder = new Request.Builder().url(url).tag(tag).headers(headers.build());
-        this.call = buildCall();
     }
 
     /**
@@ -125,6 +124,8 @@ public abstract class OkHttpRequest {
      * 返回当前实例的 {@link #call} 对象
      */
     public Call call() {
+        if (null == call)
+            this.call = buildCall();
         return call;
     }
 
@@ -132,7 +133,7 @@ public abstract class OkHttpRequest {
      * 返回当前实例的 {@link Request} 对象
      */
     public Request request() {
-        return call.request();
+        return call().request();
     }
 
     /**
@@ -141,24 +142,24 @@ public abstract class OkHttpRequest {
      * @throws IOException
      */
     public Response response() throws IOException {
-        return call.execute();
+        return call().execute();
     }
 
     /**
      * 执行异步网络请求，期间会调用 {@link #callback} 的相关方法
      */
     public void execute() {
-        if (call.isExecuted())
+        if (call().isExecuted())
             throw new IllegalStateException("Already Executed");
         callback.onBefore(request());
-        execute(call, callback);
+        execute(call(), callback);
     }
 
     /**
      * 取消本次请求
      */
     public void cancel() {
-        call.cancel();
+        call().cancel();
     }
 
     private static void sendFailResultCallback(final Call call, final Exception e, final Callback callback) {
