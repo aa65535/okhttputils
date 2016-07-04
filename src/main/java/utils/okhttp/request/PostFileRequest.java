@@ -8,10 +8,10 @@ import okhttp3.RequestBody;
 import utils.okhttp.OkHttpUtils;
 
 public class PostFileRequest extends OkHttpRequest {
-    File file;
-    MediaType mediaType;
+    protected File file;
+    protected MediaType mediaType;
 
-    PostFileRequest(PostFileBuilder builder) {
+    protected PostFileRequest(PostFileBuilder builder) {
         super(builder);
         this.file = builder.file;
         this.mediaType = builder.mediaType;
@@ -48,5 +48,12 @@ public class PostFileRequest extends OkHttpRequest {
     @Override
     protected Request buildRequest(RequestBody requestBody) {
         return builder.post(requestBody).build();
+    }
+
+    /**
+     * 返回当前实例的 {@link #file}
+     */
+    public File file() {
+        return file;
     }
 }

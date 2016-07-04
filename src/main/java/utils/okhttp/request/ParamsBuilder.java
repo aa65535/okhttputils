@@ -11,13 +11,13 @@ import utils.okhttp.utils.Util;
  */
 @SuppressWarnings("unchecked")
 public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuilder<T> {
-    Map<String, String> params;
+    protected Map<String, String> params;
 
     public ParamsBuilder() {
         params = new LinkedHashMap<>();
     }
 
-    ParamsBuilder(OkHttpRequest request) {
+    protected ParamsBuilder(OkHttpRequest request) {
         super(request);
     }
 

@@ -4,7 +4,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class GetRequest extends OkHttpRequest {
-    GetRequest(GetBuilder builder) {
+    protected GetRequest(GetBuilder builder) {
         super(builder);
     }
 

@@ -5,10 +5,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class PostStringRequest extends OkHttpRequest {
-    String content;
-    MediaType mediaType;
+    protected String content;
+    protected MediaType mediaType;
 
-    PostStringRequest(PostStringBuilder builder) {
+    protected PostStringRequest(PostStringBuilder builder) {
         super(builder);
         this.content = builder.content;
         this.mediaType = builder.mediaType;
@@ -27,5 +27,12 @@ public class PostStringRequest extends OkHttpRequest {
     @Override
     protected Request buildRequest(RequestBody requestBody) {
         return builder.post(requestBody).build();
+    }
+
+    /**
+     * 返回当前实例的 {@link #content}
+     */
+    public String content() {
+        return content;
     }
 }

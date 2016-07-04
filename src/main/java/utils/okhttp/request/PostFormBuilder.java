@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
-    List<FileInput> files;
+    protected List<FileInput> files;
 
     public PostFormBuilder() {
         files = new ArrayList<>();
     }
 
-    PostFormBuilder(PostFormRequest request) {
+    protected PostFormBuilder(PostFormRequest request) {
         super(request);
         this.params = request.params;
         this.files = request.files;

@@ -10,21 +10,20 @@ import utils.okhttp.utils.Util;
 
 @SuppressWarnings("unchecked")
 public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
-    String url;
-    Object tag;
-    Builder headers;
-    Callback callback;
-
-    long connTimeOut;
-    long writeTimeOut;
-    long readTimeOut;
+    protected String url;
+    protected Object tag;
+    protected Builder headers;
+    protected Callback callback;
+    protected long connTimeOut;
+    protected long writeTimeOut;
+    protected long readTimeOut;
 
     public OkHttpBuilder() {
         headers = new Builder();
         this.callback = Callback.CALLBACK_DEFAULT;
     }
 
-    OkHttpBuilder(OkHttpRequest request) {
+    protected OkHttpBuilder(OkHttpRequest request) {
         this.url = request.url;
         this.tag = request.tag;
         this.headers = request.headers;

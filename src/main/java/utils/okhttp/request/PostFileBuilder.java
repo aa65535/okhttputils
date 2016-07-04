@@ -6,14 +6,14 @@ import okhttp3.MediaType;
 import utils.okhttp.utils.Constants;
 
 public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> implements Constants {
-    File file;
-    MediaType mediaType;
+    protected File file;
+    protected MediaType mediaType;
 
     public PostFileBuilder() {
         this.mediaType = MEDIA_TYPE_STREAM;
     }
 
-    PostFileBuilder(PostFileRequest request) {
+    protected PostFileBuilder(PostFileRequest request) {
         super(request);
         this.file = request.file;
         this.mediaType = request.mediaType;

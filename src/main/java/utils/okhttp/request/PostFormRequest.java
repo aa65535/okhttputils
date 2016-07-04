@@ -18,10 +18,10 @@ import utils.okhttp.request.PostFormBuilder.FileInput;
 import utils.okhttp.utils.Constants;
 
 public class PostFormRequest extends OkHttpRequest {
-    volatile Map<String, String> params;
-    List<FileInput> files;
+    protected List<FileInput> files;
+    protected Map<String, String> params;
 
-    PostFormRequest(PostFormBuilder builder) {
+    protected PostFormRequest(PostFormBuilder builder) {
         super(builder);
         this.params = builder.params;
         this.files = builder.files;
@@ -93,5 +93,19 @@ public class PostFormRequest extends OkHttpRequest {
         if (params != null)
             for (String key : params.keySet())
                 builder.add(key, params.get(key));
+    }
+
+    /**
+     * 返回当前实例的 {@link #files}
+     */
+    public List<FileInput> files() {
+        return files;
+    }
+
+    /**
+     * 返回当前实例的 {@link #params}
+     */
+    public Map<String, String> params() {
+        return params;
     }
 }

@@ -6,14 +6,14 @@ import utils.okhttp.utils.Constants;
 import utils.okhttp.utils.Util;
 
 public class OtherBuilder extends OkHttpBuilder<OtherBuilder> implements Constants {
-    String method;
-    RequestBody requestBody;
+    protected String method;
+    protected RequestBody requestBody;
 
     public OtherBuilder(String method) {
         this.method = method;
     }
 
-    OtherBuilder(OtherRequest request) {
+    protected OtherBuilder(OtherRequest request) {
         super(request);
         this.method = request.method;
         this.requestBody = request.requestBody;

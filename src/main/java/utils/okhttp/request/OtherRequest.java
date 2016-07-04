@@ -5,10 +5,10 @@ import okhttp3.RequestBody;
 import utils.okhttp.utils.Method;
 
 public class OtherRequest extends OkHttpRequest {
-    String method;
-    RequestBody requestBody;
+    protected String method;
+    protected RequestBody requestBody;
 
-    OtherRequest(OtherBuilder builder) {
+    protected OtherRequest(OtherBuilder builder) {
         super(builder);
         this.method = builder.method;
         this.requestBody = builder.requestBody;
@@ -41,5 +41,12 @@ public class OtherRequest extends OkHttpRequest {
                 break;
         }
         return builder.build();
+    }
+
+    /**
+     * 返回当前实例的 {@link #method}
+     */
+    public String method() {
+        return method;
     }
 }

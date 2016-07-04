@@ -7,13 +7,13 @@ import okhttp3.HttpUrl;
 import okhttp3.HttpUrl.Builder;
 
 public class GetBuilder extends ParamsBuilder<GetBuilder> {
-    private HttpUrl httpUrl;
-    private Builder httpUrlBuilder;
+    protected HttpUrl httpUrl;
+    protected Builder httpUrlBuilder;
 
     public GetBuilder() {
     }
 
-    GetBuilder(GetRequest request) {
+    protected GetBuilder(GetRequest request) {
         super(request);
         this.url(request.url);
     }

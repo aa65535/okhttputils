@@ -14,19 +14,18 @@ import utils.okhttp.callback.Callback;
 
 @SuppressWarnings("unchecked")
 public abstract class OkHttpRequest {
-    String url;
-    Object tag;
-    Builder headers;
-    Callback callback;
-
-    long connTimeOut;
-    long writeTimeOut;
-    long readTimeOut;
+    protected String url;
+    protected Object tag;
+    protected Builder headers;
+    protected Callback callback;
+    protected long connTimeOut;
+    protected long writeTimeOut;
+    protected long readTimeOut;
 
     protected Call call;
     protected Request.Builder builder;
 
-    OkHttpRequest(OkHttpBuilder builder) {
+    protected OkHttpRequest(OkHttpBuilder builder) {
         this.url = builder.url;
         this.tag = builder.tag;
         this.headers = builder.headers;
@@ -74,17 +73,59 @@ public abstract class OkHttpRequest {
     }
 
     /**
+     * 返回当前实例的 {@link #url}
+     */
+    public String url() {
+        return url;
+    }
+
+    /**
+     * 返回当前实例的 {@link #tag}
+     */
+    public Object tag() {
+        return tag;
+    }
+
+    /**
+     * 返回当前实例的 {@link #headers}
+     */
+    public Builder headers() {
+        return headers;
+    }
+
+    /**
+     * 返回当前实例的 {@link #callback}
+     */
+    public Callback callback() {
+        return callback;
+    }
+
+    /**
+     * 返回当前实例的 {@link #connTimeOut}
+     */
+    public long connTimeOut() {
+        return connTimeOut;
+    }
+
+    /**
+     * 返回当前实例的 {@link #writeTimeOut}
+     */
+    public long writeTimeOut() {
+        return writeTimeOut;
+    }
+
+    /**
+     * 返回当前实例的 {@link #readTimeOut}
+     */
+    public long readTimeOut() {
+        return readTimeOut;
+    }
+
+    /**
      * 返回当前实例的 {@link #call} 对象
      */
     public Call call() {
         return call;
-    }
-
-    /**
-     * 返回当前实例的 {@link #callback} 对象
-     */
-    public Callback callback() {
-        return callback;
     }
 
     /**
@@ -155,7 +196,7 @@ public abstract class OkHttpRequest {
             public void onResponse(final Call call, final Response response) {
                 try {
                     if (call.isCanceled()) {
-                        sendFailResultCallback(call, new IOException("Canceled!"), callback);
+                        sendFailResultCallback(call, new IOException("Canceled"), callback);
                         return;
                     }
                     if (!response.isSuccessful()) {

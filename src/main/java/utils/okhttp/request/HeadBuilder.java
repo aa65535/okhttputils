@@ -4,7 +4,7 @@ public class HeadBuilder extends GetBuilder {
     public HeadBuilder() {
     }
 
-    HeadBuilder(GetRequest request) {
+    protected HeadBuilder(GetRequest request) {
         super(request);
     }
 

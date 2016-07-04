@@ -4,14 +4,14 @@ import okhttp3.MediaType;
 import utils.okhttp.utils.Constants;
 
 public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implements Constants {
-    String content;
-    MediaType mediaType;
+    protected String content;
+    protected MediaType mediaType;
 
     public PostStringBuilder() {
         this.mediaType = MEDIA_TYPE_PLAIN;
     }
 
-    PostStringBuilder(PostStringRequest request) {
+    protected PostStringBuilder(PostStringRequest request) {
         super(request);
         this.content = request.content;
         this.mediaType = request.mediaType;
