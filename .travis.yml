@@ -6,16 +6,11 @@ jdk:
   - oraclejdk8
   - oraclejdk7
 
-before_script:
+before_install:
   - chmod +x gradlew
 
 script:
-  - ./gradlew check
+  - ./gradlew build
 
 notifications:
   email: false
-
-cache:
-  directories:
-  - $HOME/.m2
-  - $HOME/.gradle
