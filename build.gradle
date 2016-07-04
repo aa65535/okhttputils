@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'utils.okhttp'
-version = '2.0.1'
+version = '2.0.2'
 
 allprojects {
     repositories {
@@ -22,12 +22,12 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-task sourcesJar (type:Jar) {
+task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task javadocJar (type: Jar, dependsOn: javadoc) {
+task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
@@ -71,13 +71,15 @@ dependencies {
 }
 
 bintray {
-    boolean isHasFile = project.rootProject.findProject('local.properties') != null
-    Properties properties = new Properties()
-    if (isHasFile) {
+    if (new File('local.properties').exists()) {
+        Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+    } else {
+        user = System.getenv("bintray.user")
+        key = System.getenv("bintray.apikey")
     }
-    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
-    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
     publications = ['mavenJava']
     pkg {
         repo = 'maven'
