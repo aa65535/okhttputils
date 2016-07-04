@@ -71,10 +71,13 @@ dependencies {
 }
 
 bintray {
+    boolean isHasFile = project.rootProject.findProject('local.properties') != null
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    if (isHasFile) {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    }
+    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
+    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
     publications = ['mavenJava']
     pkg {
         repo = 'maven'
