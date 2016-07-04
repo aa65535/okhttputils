@@ -29,9 +29,6 @@ public class PostFileRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody wrapRequestBody(RequestBody requestBody) {
-        if (callback == null)
-            return requestBody;
-
         return new CountingRequestBody(requestBody, new CountingRequestBody.Listener() {
             @Override
             public void onRequestProgress(final long bytesWritten, final long contentLength) {

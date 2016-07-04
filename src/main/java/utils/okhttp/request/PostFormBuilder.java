@@ -1,10 +1,18 @@
 package utils.okhttp.request;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import utils.okhttp.utils.Constants;
 
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     protected List<FileInput> files;
@@ -57,6 +65,21 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
             this.name = name;
             this.filename = filename;
             this.file = file;
+        }
+
+        public RequestBody fileBody() {
+            return RequestBody.create(getMediaType(filename, file), file);
+        }
+
+        public static MediaType getMediaType(String filename, File file) {
+            try {
+                FileNameMap fileNameMap = URLConnection.getFileNameMap();
+                String name = null == filename ? file.getName() : filename;
+                String contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(name, "UTF-8"));
+                return MediaType.parse(contentTypeFor);
+            } catch (UnsupportedEncodingException ignored) {
+            }
+            return Constants.MEDIA_TYPE_STREAM;
         }
 
         @Override
