@@ -123,7 +123,7 @@ public abstract class OkHttpRequest {
     /**
      * 返回当前实例的 {@link #call} 对象
      */
-    public Call call() {
+    public synchronized Call call() {
         if (null == call)
             this.call = buildCall();
         return call;
