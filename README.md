@@ -2,7 +2,7 @@
 
 A Java utils library for [OkHttp][0]. For more information see the [Wiki][1].
 
-[ ![Download][3] ][2]
+[![Download][3]][2] [![Build Status][5]][4]
 
 #Binaries
 
@@ -73,3 +73,5 @@ limitations under the License.
 [1]: https://github.com/aa65535/okhttputils/wiki
 [2]: https://bintray.com/aa65535/maven/okhttputils/_latestVersion
 [3]: https://api.bintray.com/packages/aa65535/maven/okhttputils/images/download.svg
+[4]: https://travis-ci.org/aa65535/okhttputils
+[5]: https://travis-ci.org/aa65535/okhttputils.svg?branch=master
