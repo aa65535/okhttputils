@@ -33,8 +33,8 @@ public abstract class OkHttpRequest {
         this.connTimeOut = builder.connTimeOut;
         this.writeTimeOut = builder.writeTimeOut;
         this.readTimeOut = builder.readTimeOut;
-        this.call = buildCall();
         this.builder = new Request.Builder().url(url).tag(tag).headers(headers.build());
+        this.call = buildCall();
     }
 
     /**
