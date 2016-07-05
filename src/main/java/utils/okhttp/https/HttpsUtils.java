@@ -1,6 +1,5 @@
 package utils.okhttp.https;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -20,6 +19,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.internal.Util;
 import utils.okhttp.utils.Objects;
 
 /**
@@ -64,11 +64,7 @@ public class HttpsUtils {
             for (InputStream certificate : certificates) {
                 String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
-                try {
-                    if (Objects.nonNull(certificate))
-                        certificate.close();
-                } catch (IOException ignored) {
-                }
+                Util.closeQuietly(certificate);
             }
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);

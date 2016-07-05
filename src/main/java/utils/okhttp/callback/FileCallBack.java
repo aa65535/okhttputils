@@ -2,12 +2,11 @@ package utils.okhttp.callback;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import okhttp3.Response;
+import okhttp3.internal.Util;
 import utils.okhttp.OkHttpUtils;
-import utils.okhttp.utils.Objects;
 
 public abstract class FileCallBack extends Callback<File> {
     private File destFileDir;
@@ -43,9 +42,9 @@ public abstract class FileCallBack extends Callback<File> {
     @Override
     public File parseNetworkResponse(Response response) throws Exception {
         InputStream is = null;
+        FileOutputStream fos = null;
         byte[] buf = new byte[2048];
         int len;
-        FileOutputStream fos = null;
         try {
             is = response.body().byteStream();
             final long total = response.body().contentLength();
@@ -56,16 +55,13 @@ public abstract class FileCallBack extends Callback<File> {
                     onGetFileSize(total);
                 }
             });
-            if (!destFileDir.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                destFileDir.mkdirs();
-            }
+            //noinspection ResultOfMethodCallIgnored
+            destFileDir.mkdirs();
             File file = new File(destFileDir, fileName);
             fos = new FileOutputStream(file);
             while ((len = is.read(buf)) != -1) {
-                sum += len;
                 fos.write(buf, 0, len);
-                final long finalSum = sum;
+                final long finalSum = (sum += len);
                 OkHttpUtils.getInstance().getThreadExecutor().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -76,16 +72,8 @@ public abstract class FileCallBack extends Callback<File> {
             fos.flush();
             return file;
         } finally {
-            try {
-                if (Objects.nonNull(is))
-                    is.close();
-            } catch (IOException ignored) {
-            }
-            try {
-                if (Objects.nonNull(fos))
-                    fos.close();
-            } catch (IOException ignored) {
-            }
+            Util.closeQuietly(is);
+            Util.closeQuietly(fos);
         }
     }
 }

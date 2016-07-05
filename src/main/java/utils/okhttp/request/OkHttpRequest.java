@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.internal.Util;
 import utils.okhttp.OkHttpUtils;
 import utils.okhttp.callback.Callback;
 import utils.okhttp.utils.Objects;
@@ -209,8 +210,7 @@ public abstract class OkHttpRequest {
                 } catch (Exception e) {
                     sendFailResultCallback(call, e, callback);
                 } finally {
-                    if (Objects.nonNull(response.body()))
-                        response.body().close();
+                    Util.closeQuietly(response.body());
                 }
             }
         });
