@@ -1,5 +1,6 @@
 package utils.okhttp.request;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -73,13 +74,13 @@ public class PostFormRequest extends OkHttpRequest {
      * 返回当前实例的 {@link #files}
      */
     public List<FileInput> files() {
-        return files;
+        return Collections.unmodifiableList(files);
     }
 
     /**
      * 返回当前实例的 {@link #params}
      */
     public Map<String, String> params() {
-        return params;
+        return Collections.unmodifiableMap(params);
     }
 }
