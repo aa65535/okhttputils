@@ -3,7 +3,7 @@ package utils.okhttp.request;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import utils.okhttp.utils.Util;
+import utils.okhttp.utils.Objects;
 
 /**
  * 携带请求参数的 Builder
@@ -33,7 +33,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数
      */
     public T addParams(Map<String, String> params) {
-        if (null != params) {
+        if (Objects.nonNull(params)) {
             this.params.putAll(params);
         }
         return (T) this;
@@ -43,9 +43,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 不可为 {@code null}
      */
     public T addParam(String name, Object value) {
-        if (null == value)
-            throw new NullPointerException("the params [" + name + "] can not be null.");
-        putParam(name, value);
+        putParam(name, Objects.requireNonNull(value, "the params [" + name + "] can not be null."));
         return (T) this;
     }
 
@@ -53,7 +51,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 为空时不添加
      */
     public T addOptionParam(String name, Object value) {
-        if (!Util.isEmpty(value))
+        if (!Objects.isEmpty(value))
             putParam(name, value);
         return (T) this;
     }
@@ -62,9 +60,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 不可为空
      */
     public T addNonEmptyParam(String name, Object value) {
-        if (Util.isEmpty(value))
-            throw new IllegalArgumentException("the params [" + name + "] can not be empty.");
-        putParam(name, value);
+        putParam(name, Objects.requireNonEmpty(value, "the params [" + name + "] can not be empty."));
         return (T) this;
     }
 
@@ -72,7 +68,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 为 {@code null} 时添加空字符串
      */
     public T addNullableParam(String name, Object value) {
-        if (null != value)
+        if (Objects.nonNull(value))
             putParam(name, value);
         else
             putParam(name, "");

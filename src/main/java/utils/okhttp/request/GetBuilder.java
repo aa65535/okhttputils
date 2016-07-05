@@ -5,9 +5,9 @@ import java.util.Map.Entry;
 
 import okhttp3.HttpUrl;
 import okhttp3.HttpUrl.Builder;
+import utils.okhttp.utils.Objects;
 
 public class GetBuilder extends ParamsBuilder<GetBuilder> {
-    protected HttpUrl httpUrl;
     protected Builder httpUrlBuilder;
 
     public GetBuilder() {
@@ -26,8 +26,7 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
 
     @Override
     public GetBuilder url(String url) {
-        this.httpUrl = HttpUrl.parse(url);
-        this.httpUrlBuilder = httpUrl.newBuilder();
+        this.httpUrlBuilder = HttpUrl.parse(url).newBuilder();
         return this;
     }
 
@@ -39,7 +38,7 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
 
     @Override
     public GetBuilder addParams(Map<String, String> params) {
-        if (null != params) {
+        if (Objects.nonNull(params)) {
             for (Entry<String, String> entry : params.entrySet())
                 httpUrlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         }
@@ -70,10 +69,8 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
 
     @Override
     public GetBuilder removeAllParam() {
-        if (httpUrl.querySize() > 0) {
-            for (String name : httpUrl.queryParameterNames())
-                httpUrlBuilder.removeAllQueryParameters(name);
-        }
+        for (String name : httpUrlBuilder.build().queryParameterNames())
+            httpUrlBuilder.removeAllQueryParameters(name);
         return this;
     }
 

@@ -11,6 +11,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import utils.okhttp.OkHttpUtils;
 import utils.okhttp.callback.Callback;
+import utils.okhttp.utils.Objects;
 
 @SuppressWarnings("unchecked")
 public abstract class OkHttpRequest {
@@ -124,9 +125,9 @@ public abstract class OkHttpRequest {
      * 返回当前实例的 {@link #call} 对象
      */
     public synchronized Call call() {
-        if (null == call)
-            this.call = buildCall();
-        return call;
+        if (Objects.nonNull(call))
+            return call;
+        return (call = buildCall());
     }
 
     /**
@@ -208,7 +209,7 @@ public abstract class OkHttpRequest {
                 } catch (Exception e) {
                     sendFailResultCallback(call, e, callback);
                 } finally {
-                    if (response.body() != null)
+                    if (Objects.nonNull(response.body()))
                         response.body().close();
                 }
             }

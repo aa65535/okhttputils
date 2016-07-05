@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import okhttp3.Response;
 import utils.okhttp.OkHttpUtils;
+import utils.okhttp.utils.Objects;
 
 public abstract class FileCallBack extends Callback<File> {
     private File destFileDir;
@@ -76,12 +77,12 @@ public abstract class FileCallBack extends Callback<File> {
             return file;
         } finally {
             try {
-                if (is != null)
+                if (Objects.nonNull(is))
                     is.close();
             } catch (IOException ignored) {
             }
             try {
-                if (fos != null)
+                if (Objects.nonNull(fos))
                     fos.close();
             } catch (IOException ignored) {
             }

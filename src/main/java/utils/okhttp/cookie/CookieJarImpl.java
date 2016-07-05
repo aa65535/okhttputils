@@ -7,6 +7,7 @@ import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
+import utils.okhttp.utils.Objects;
 
 /**
  * 对 {@link CookieJar} 的包装
@@ -15,9 +16,7 @@ public class CookieJarImpl implements CookieJar, HasCookieStore {
     private CookieStore cookieStore;
 
     public CookieJarImpl(CookieStore cookieStore) {
-        if (cookieStore == null)
-            throw new NullPointerException("cookieStore can not be null.");
-        this.cookieStore = cookieStore;
+        this.cookieStore = Objects.requireNonNull(cookieStore, "cookieStore can not be null.");
     }
 
     @Override

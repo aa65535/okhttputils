@@ -20,6 +20,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import utils.okhttp.utils.Objects;
+
 /**
  * Https 证书工具类
  */
@@ -35,27 +37,23 @@ public class HttpsUtils {
      * @param password     本地证书的密码
      */
     public static SSLParams getSSLParams(InputStream[] certificates, InputStream bksFile, String password) {
-        SSLParams sslParams = new SSLParams();
         try {
             TrustManager[] trustManagers = prepareTrustManager(certificates);
             KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             SSLContext sslContext = SSLContext.getInstance("TLS");
             X509TrustManager trustManager;
-            if (trustManagers != null)
-                trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
-            else
-                trustManager = new UnSafeTrustManager();
+            trustManager = Objects.nonNull(trustManagers)
+                    ? new MyTrustManager(chooseTrustManager(trustManagers))
+                    : new UnSafeTrustManager();
             sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
-            sslParams.sslSocketFactory = sslContext.getSocketFactory();
-            sslParams.trustManager = trustManager;
-            return sslParams;
+            return new SSLParams(sslContext.getSocketFactory(), trustManager);
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static TrustManager[] prepareTrustManager(InputStream... certificates) {
-        if (certificates == null || certificates.length <= 0)
+    private static TrustManager[] prepareTrustManager(InputStream[] certificates) {
+        if (Objects.isEmpty(certificates))
             return null;
 
         try {
@@ -67,7 +65,7 @@ public class HttpsUtils {
                 String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
                 try {
-                    if (certificate != null)
+                    if (Objects.nonNull(certificate))
                         certificate.close();
                 } catch (IOException ignored) {
                 }
@@ -84,7 +82,7 @@ public class HttpsUtils {
 
     private static KeyManager[] prepareKeyManager(InputStream bksFile, String password) {
         try {
-            if (bksFile == null || password == null)
+            if (Objects.isNull(bksFile) || Objects.isNull(password))
                 return null;
 
             KeyStore clientKeyStore = KeyStore.getInstance("BKS");
@@ -109,6 +107,11 @@ public class HttpsUtils {
     public static class SSLParams {
         public SSLSocketFactory sslSocketFactory;
         public X509TrustManager trustManager;
+
+        public SSLParams(SSLSocketFactory sslSocketFactory, X509TrustManager trustManager) {
+            this.sslSocketFactory = sslSocketFactory;
+            this.trustManager = trustManager;
+        }
     }
 
     public static class UnSafeHostnameVerifier implements HostnameVerifier {

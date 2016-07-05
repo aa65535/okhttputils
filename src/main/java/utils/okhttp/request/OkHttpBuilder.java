@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import okhttp3.Headers;
 import okhttp3.Headers.Builder;
 import utils.okhttp.callback.Callback;
-import utils.okhttp.utils.Util;
+import utils.okhttp.utils.Objects;
 
 @SuppressWarnings("unchecked")
 public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
@@ -58,7 +58,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 设置求请的回调
      */
     public T callback(Callback callback) {
-        if (callback != null)
+        if (Objects.nonNull(callback))
             this.callback = callback;
         return (T) this;
     }
@@ -84,10 +84,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加请求头
      */
     public T addHeaders(Map<String, String> headers) {
-        if (null != headers) {
-            for (Entry<String, String> entry : headers.entrySet()) {
+        if (Objects.nonNull(headers)) {
+            for (Entry<String, String> entry : headers.entrySet())
                 this.headers.add(entry.getKey(), entry.getValue());
-            }
         }
         return (T) this;
     }
@@ -96,9 +95,8 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 设置指定 {@code name} 的请求头的值
      */
     public T setHeader(String name, Object value) {
-        if (null == value)
-            throw new NullPointerException("the header [" + name + "] can not be null.");
-        headers.set(name, value.toString());
+        headers.set(name, Objects.requireNonNull(value,
+                "the header [" + name + "] can not be null.").toString());
         return (T) this;
     }
 
@@ -106,9 +104,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头
      */
     public T addHeader(String name, Object value) {
-        if (null == value)
-            throw new NullPointerException("the header [" + name + "] can not be null.");
-        putHeader(name, value);
+        putHeader(name, Objects.requireNonNull(value, "the header [" + name + "] can not be null."));
         return (T) this;
     }
 
@@ -116,7 +112,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，如果 {@code value} 为空，则不添加
      */
     public T addOptionHeader(String name, Object value) {
-        if (!Util.isEmpty(value))
+        if (!Objects.isEmpty(value))
             putHeader(name, value);
         return (T) this;
     }
@@ -125,9 +121,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，{@code value} 不可为空
      */
     public T addNonEmptyHeader(String name, Object value) {
-        if (Util.isEmpty(value))
-            throw new IllegalArgumentException("the header [" + name + "] can not be empty.");
-        putHeader(name, value);
+        putHeader(name, Objects.requireNonEmpty(value, "the header [" + name + "] can not be empty."));
         return (T) this;
     }
 
@@ -135,7 +129,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，{@code value} 为空时添加空字符串
      */
     public T addNullableHeader(String name, Object value) {
-        if (null != value)
+        if (Objects.nonNull(value))
             putHeader(name, value);
         else
             putHeader(name, "");

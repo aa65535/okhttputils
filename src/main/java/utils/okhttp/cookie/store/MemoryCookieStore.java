@@ -8,6 +8,7 @@ import java.util.Set;
 
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
+import utils.okhttp.utils.Objects;
 
 public class MemoryCookieStore implements CookieStore {
     private final HashMap<String, List<Cookie>> allCookies = new HashMap<>();
@@ -19,7 +20,7 @@ public class MemoryCookieStore implements CookieStore {
         for (Cookie cookie : cookies) {
             String va = cookie.name();
             Iterator<Cookie> itOld = oldCookies.iterator();
-            while (va != null && itOld.hasNext())
+            while (Objects.nonNull(va) && itOld.hasNext())
                 if (va.equals(itOld.next().name()))
                     itOld.remove();
         }
@@ -29,10 +30,8 @@ public class MemoryCookieStore implements CookieStore {
     @Override
     public synchronized List<Cookie> get(HttpUrl url) {
         List<Cookie> cookies = allCookies.get(url.host());
-        if (cookies == null) {
-            cookies = new ArrayList<>();
-            allCookies.put(url.host(), cookies);
-        }
+        if (Objects.isNull(cookies))
+            allCookies.put(url.host(), (cookies = new ArrayList<>()));
         return cookies;
     }
 
@@ -48,7 +47,7 @@ public class MemoryCookieStore implements CookieStore {
     @Override
     public boolean remove(HttpUrl url, Cookie cookie) {
         List<Cookie> cookies = allCookies.get(url.host());
-        return cookie != null && cookies.remove(cookie);
+        return Objects.nonNull(cookie) && cookies.remove(cookie);
     }
 
     @Override

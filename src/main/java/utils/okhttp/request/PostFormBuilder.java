@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import utils.okhttp.utils.Constants;
+import utils.okhttp.utils.Objects;
 
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     protected List<FileInput> files;
@@ -36,7 +37,7 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
      * 设置待提交的文件列表
      */
     public PostFormBuilder files(String name, Map<String, File> files) {
-        if (null != files) {
+        if (Objects.nonNull(files)) {
             this.files.clear();
             for (Entry<String, File> entry : files.entrySet())
                 addFile(name, entry.getKey(), entry.getValue());
@@ -74,7 +75,7 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
         public static MediaType getMediaType(String filename, File file) {
             try {
                 FileNameMap fileNameMap = URLConnection.getFileNameMap();
-                String name = null == filename ? file.getName() : filename;
+                String name = Objects.getDefinedObject(filename, file.getName());
                 String contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(name, "UTF-8"));
                 return MediaType.parse(contentTypeFor);
             } catch (UnsupportedEncodingException ignored) {

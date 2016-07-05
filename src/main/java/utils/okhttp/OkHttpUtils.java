@@ -3,10 +3,8 @@ package utils.okhttp;
 import okhttp3.Call;
 import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
-import utils.okhttp.cookie.CookieJarImpl;
 import utils.okhttp.cookie.store.CookieStore;
 import utils.okhttp.cookie.store.HasCookieStore;
-import utils.okhttp.cookie.store.MemoryCookieStore;
 import utils.okhttp.request.GetBuilder;
 import utils.okhttp.request.HeadBuilder;
 import utils.okhttp.request.OtherBuilder;
@@ -15,6 +13,7 @@ import utils.okhttp.request.PostFormBuilder;
 import utils.okhttp.request.PostStringBuilder;
 import utils.okhttp.utils.Method;
 import utils.okhttp.utils.ThreadExecutor;
+import utils.okhttp.utils.Objects;
 
 @SuppressWarnings("unused")
 public class OkHttpUtils {
@@ -23,13 +22,7 @@ public class OkHttpUtils {
     private volatile static OkHttpUtils mInstance;
 
     private OkHttpUtils(OkHttpClient okHttpClient) {
-        if (okHttpClient == null)
-            mOkHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
-                    .build();
-        else
-            mOkHttpClient = okHttpClient;
-
+        mOkHttpClient = Objects.getDefinedObject(okHttpClient, new OkHttpClient.Builder().build());
         mThreadExecutor = new ThreadExecutor();
     }
 
@@ -37,19 +30,18 @@ public class OkHttpUtils {
      * 初始化 {@link OkHttpClient} 对象，需要在 {@link #getInstance} 调用之前执行
      */
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
-        if (null != mInstance)
+        if (Objects.nonNull(mInstance))
             throw new IllegalStateException("Instance already exist, it can not be created again.");
-        mInstance = new OkHttpUtils(okHttpClient);
-        return mInstance;
+        return (mInstance = new OkHttpUtils(okHttpClient));
     }
 
     /**
      * 获取一个 OkHttpUtils 实例
      */
     public synchronized static OkHttpUtils getInstance() {
-        if (mInstance == null)
-            mInstance = new OkHttpUtils(null);
-        return mInstance;
+        if (Objects.nonNull(mInstance))
+            return mInstance;
+        return (mInstance = new OkHttpUtils(null));
     }
 
     /**
@@ -149,7 +141,7 @@ public class OkHttpUtils {
      */
     public CookieStore getCookieStore() {
         final CookieJar cookieJar = mOkHttpClient.cookieJar();
-        if (cookieJar == null)
+        if (Objects.isNull(cookieJar))
             throw new IllegalStateException("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
         if (cookieJar instanceof HasCookieStore)
             return ((HasCookieStore) cookieJar).getCookieStore();

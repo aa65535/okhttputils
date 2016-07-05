@@ -2,6 +2,7 @@ package utils.okhttp.request;
 
 import okhttp3.MediaType;
 import utils.okhttp.utils.Constants;
+import utils.okhttp.utils.Objects;
 
 public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implements Constants {
     protected String content;
@@ -19,8 +20,7 @@ public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implemen
 
     @Override
     public PostStringRequest build() {
-        if (this.content == null)
-            throw new NullPointerException("the content can not be null !");
+        Objects.requireNonNull(content, "the content can not be null!");
         return new PostStringRequest(this);
     }
 
