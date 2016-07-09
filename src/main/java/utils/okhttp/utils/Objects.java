@@ -65,9 +65,7 @@ public final class Objects {
      * @param obj 待检查的对象
      */
     public static <T> T requireNonNull(T obj) {
-        if (isNull(obj))
-            throw new NullPointerException();
-        return obj;
+        return requireNonNull(obj, null);
     }
 
     /**
@@ -83,6 +81,15 @@ public final class Objects {
     }
 
     /**
+     * 检查一个对象是否为空，如果为空，则抛出 {@link NullPointerException}，否则返回此对象
+     *
+     * @param obj 待检查的对象
+     */
+    public static <T> T requireNonEmpty(T obj) {
+        return requireNonEmpty(obj, null);
+    }
+
+    /**
      * 检查一个对象是否为空，如果为空，则抛出带消息的 {@link IllegalArgumentException}，否则返回此对象
      *
      * @param obj 待检查的对象
@@ -90,17 +97,6 @@ public final class Objects {
     public static <T> T requireNonEmpty(T obj, String message) {
         if (isEmpty(obj))
             throw new IllegalArgumentException(message);
-        return obj;
-    }
-
-    /**
-     * 检查一个对象是否为空，如果为空，则抛出 {@link NullPointerException}，否则返回此对象
-     *
-     * @param obj 待检查的对象
-     */
-    public static <T> T requireNonEmpty(T obj) {
-        if (isEmpty(obj))
-            throw new IllegalArgumentException();
         return obj;
     }
 }
