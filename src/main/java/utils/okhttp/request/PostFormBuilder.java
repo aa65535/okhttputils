@@ -19,12 +19,12 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     protected List<FileInput> files;
 
     public PostFormBuilder() {
-        files = new ArrayList<>();
+        this.files = new ArrayList<>();
     }
 
     protected PostFormBuilder(PostFormRequest request) {
         super(request);
-        this.params = request.params;
+        this.params(request.params);
         this.files = request.files;
     }
 
@@ -34,9 +34,12 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     }
 
     /**
-     * 设置待提交的文件列表
+     * 添加一个待提交的文件映射表
+     *
+     * @param name  From 字段名称
+     * @param files 文件映射表, Key 代表文件名 Value 代表文件
      */
-    public PostFormBuilder files(String name, Map<String, File> files) {
+    public PostFormBuilder addFiles(String name, Map<String, File> files) {
         if (Objects.nonNull(files)) {
             this.files.clear();
             for (Entry<String, File> entry : files.entrySet())

@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
-import okhttp3.Headers.Builder;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.internal.Util;
@@ -18,24 +19,25 @@ import utils.okhttp.utils.Objects;
 public abstract class OkHttpRequest {
     protected String url;
     protected Object tag;
-    protected Builder headers;
+    protected Headers headers;
     protected Callback callback;
     protected long connTimeOut;
     protected long writeTimeOut;
     protected long readTimeOut;
 
     protected Call call;
-    protected final Request.Builder builder;
+    protected final Builder builder;
 
     protected OkHttpRequest(OkHttpBuilder builder) {
         this.url = builder.url;
         this.tag = builder.tag;
-        this.headers = builder.headers;
+        this.headers = builder.headers.build();
         this.callback = builder.callback;
         this.connTimeOut = builder.connTimeOut;
         this.writeTimeOut = builder.writeTimeOut;
         this.readTimeOut = builder.readTimeOut;
-        this.builder = new Request.Builder().url(url).tag(tag).headers(headers.build());
+        Objects.requireNonNull(url, "the url can not be null.");
+        this.builder = new Builder().url(url).tag(tag).headers(headers);
     }
 
     /**
@@ -90,7 +92,7 @@ public abstract class OkHttpRequest {
     /**
      * 返回当前实例的 {@link #headers}
      */
-    public Builder headers() {
+    public Headers headers() {
         return headers;
     }
 

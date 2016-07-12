@@ -19,18 +19,18 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     protected long readTimeOut;
 
     public OkHttpBuilder() {
-        headers = new Builder();
+        this.headers = new Builder();
         this.callback = Callback.CALLBACK_DEFAULT;
     }
 
     protected OkHttpBuilder(OkHttpRequest request) {
-        this.url = request.url;
-        this.tag = request.tag;
-        this.headers = request.headers;
-        this.callback = request.callback;
-        this.connTimeOut = request.connTimeOut;
-        this.writeTimeOut = request.writeTimeOut;
-        this.readTimeOut = request.readTimeOut;
+        this.url(request.url);
+        this.tag(request.tag);
+        this.headers(request.headers);
+        this.callback(request.callback);
+        this.connTimeOut(request.connTimeOut);
+        this.writeTimeOut(request.writeTimeOut);
+        this.readTimeOut(request.readTimeOut);
     }
 
     /**

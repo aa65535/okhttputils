@@ -10,7 +10,7 @@ public class HeadBuilder extends GetBuilder {
 
     @Override
     public HeadRequest build() {
-        this.url = getUrl();
+        url = getUrl();
         return new HeadRequest(this);
     }
 }

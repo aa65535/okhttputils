@@ -14,7 +14,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
     protected Map<String, String> params;
 
     public ParamsBuilder() {
-        params = new LinkedHashMap<>();
+        this.params = new LinkedHashMap<>();
     }
 
     protected ParamsBuilder(OkHttpRequest request) {

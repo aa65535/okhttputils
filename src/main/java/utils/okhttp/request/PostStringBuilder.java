@@ -14,13 +14,13 @@ public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implemen
 
     protected PostStringBuilder(PostStringRequest request) {
         super(request);
-        this.content = request.content;
-        this.mediaType = request.mediaType;
+        this.content(request.content);
+        this.mediaType(request.mediaType);
     }
 
     @Override
     public PostStringRequest build() {
-        Objects.requireNonNull(content, "the content can not be null!");
+        Objects.requireNonNull(content, "the content can not be null.");
         return new PostStringRequest(this);
     }
 

@@ -30,18 +30,18 @@ public class PostFormRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
         if (files.isEmpty())
-            return getFormBody();
-        return getMultipartBody();
+            return newFormBody();
+        return newMultipartBody();
     }
 
-    private RequestBody getFormBody() {
+    private RequestBody newFormBody() {
         FormBody.Builder builder = new FormBody.Builder();
         for (Entry<String, String> entry : params.entrySet())
             builder.add(entry.getKey(), entry.getValue());
         return builder.build();
     }
 
-    private RequestBody getMultipartBody() {
+    private RequestBody newMultipartBody() {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Entry<String, String> entry : params.entrySet())
             builder.addFormDataPart(entry.getKey(), entry.getValue());

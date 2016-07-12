@@ -16,7 +16,7 @@ public class OtherBuilder extends OkHttpBuilder<OtherBuilder> implements Constan
     protected OtherBuilder(OtherRequest request) {
         super(request);
         this.method = request.method;
-        this.requestBody = request.requestBody;
+        this.requestBody(request.requestBody);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class OtherBuilder extends OkHttpBuilder<OtherBuilder> implements Constan
 
     public OtherBuilder requestBody(String content) {
         if (Objects.nonNull(content))
-            this.requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
+            requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
         return this;
     }
 

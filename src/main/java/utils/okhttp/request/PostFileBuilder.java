@@ -16,13 +16,13 @@ public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> implements C
 
     protected PostFileBuilder(PostFileRequest request) {
         super(request);
-        this.file = request.file;
-        this.mediaType = request.mediaType;
+        this.file(request.file);
+        this.mediaType(request.mediaType);
     }
 
     @Override
     public PostFileRequest build() {
-        Objects.requireNonNull(file, "the file can not be null!");
+        Objects.requireNonNull(file, "the file can not be null.");
         return new PostFileRequest(this);
     }
 
