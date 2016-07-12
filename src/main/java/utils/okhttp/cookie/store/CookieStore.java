@@ -7,36 +7,48 @@ import okhttp3.HttpUrl;
 
 public interface CookieStore {
     /**
-     * 添加 {@code cookies}
+     * 将一个 cookie 添加到存储区中。为每个传入的 HTTP 响应调用此方法。
+     * <p/>
+     * 如果对应于给定的 cookie 已经存在，则使用新的 cookie 替换它。
      *
-     * @param url     给定的 URL
-     * @param cookies 待保存的 {@code cookies}
+     * @param url    与此 cookie 关联的 url
+     * @param cookie 要存储的 cookie
+     * @throws NullPointerException 如果 {@code cookie} 为 {@code null}
+     * @see #get
      */
-    void add(HttpUrl url, List<Cookie> cookies);
+    void add(HttpUrl url, Cookie cookie);
 
     /**
-     * 根据给定的 URL 获取 {@code cookies}
+     * 获取与给定 HttpUrl 匹配的 cookie。
+     * 只返回未过期的 cookie。为每个传出的 HTTP 请求调用此方法。
      *
-     * @param url 给定的 URL
+     * @param url 与要返回的 cookie 相匹配的 HttpUrl
+     * @return Cookies 的不可变列表；如果没有与给定 HttpUrl 匹配的 cookie，则返回空列表
+     * @throws NullPointerException 如果 {@code url} 为 {@code null}
+     * @see #add
      */
     List<Cookie> get(HttpUrl url);
 
     /**
-     * 获取全部 {@code cookies}
+     * 获取 cookie 存储区中所有未过期的 cookie
+     *
+     * @return Cookies 的不可变列表；如果存储区中没有 cookie，则返回空列表
      */
     List<Cookie> getCookies();
 
     /**
-     * 根据给定的 URL 删除 {@code cookies}
+     * 从存储区中移除 cookie
      *
-     * @param url    给定的 URL
-     * @param cookie 待删除的 {@code cookie}
-     * @return {@code cookie} 存在并成功删除返回 {@code true} 否则返回 {@code false}
+     * @param cookie 要移除的 cookie
+     * @return 如果此存储区包含指定的 cookie，则返回 {@code true}
+     * @throws NullPointerException 如果 cookie 为 {@code null}
      */
-    boolean remove(HttpUrl url, Cookie cookie);
+    boolean remove(Cookie cookie);
 
     /**
-     * 删除所有保存的 {@code cookies}
+     * 移除此 cookie 存储区中的所有 cookie
+     *
+     * @return 如果此存储区由于调用而更改，则返回 {@code true}
      */
-    void removeAll();
+    boolean removeAll();
 }

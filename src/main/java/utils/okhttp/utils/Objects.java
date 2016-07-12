@@ -6,6 +6,20 @@ import java.util.Map;
 
 public final class Objects {
     /**
+     * 判断两个对象是否相等
+     */
+    public static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
+
+    /**
+     * 返回对象的哈希码值
+     */
+    public static int hashCode(Object o) {
+        return o != null ? o.hashCode() : 0;
+    }
+
+    /**
      * 判断对象是否为 {@code null}
      *
      * @param obj 待检查的对象

@@ -45,6 +45,49 @@ public class OkHttpUtils {
     }
 
     /**
+     * 获取 {@link OkHttpClient} 对象
+     *
+     * @return {@link OkHttpClient} 对象
+     */
+    public OkHttpClient getOkHttpClient() {
+        return mOkHttpClient;
+    }
+
+    /**
+     * 获取线程池对象
+     *
+     * @return {@link ThreadExecutor} 对象
+     */
+    public synchronized ThreadExecutor getThreadExecutor() {
+        return mThreadExecutor;
+    }
+
+    /**
+     * 获取 {@link OkHttpClient.Builder#cookieJar} 方法中传入的的 {@link CookieStore} 对象
+     *
+     * @return {@link CookieStore} 对象
+     */
+    public CookieStore getCookieStore() {
+        final CookieJar cookieJar = mOkHttpClient.cookieJar();
+        if (cookieJar instanceof HasCookieStore)
+            return ((HasCookieStore) cookieJar).getCookieStore();
+        return null;
+    }
+
+    /**
+     * 根据设置的 TAG 取消相应的网络请求
+     */
+    public void cancelTag(Object tag) {
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls())
+            if (tag.equals(call.request().tag()))
+                call.cancel();
+
+        for (Call call : mOkHttpClient.dispatcher().runningCalls())
+            if (tag.equals(call.request().tag()))
+                call.cancel();
+    }
+
+    /**
      * 使用 GET 请求
      *
      * @return {@link GetBuilder} 对象
@@ -114,50 +157,5 @@ public class OkHttpUtils {
      */
     public static OtherBuilder patch() {
         return new OtherBuilder(Method.PATCH);
-    }
-
-    /**
-     * 获取已经初始化的 {@link OkHttpClient} 对象
-     *
-     * @return {@link OkHttpClient} 对象
-     */
-    public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient;
-    }
-
-    /**
-     * 获取线程池对象
-     *
-     * @return {@link ThreadExecutor} 对象
-     */
-    public synchronized ThreadExecutor getThreadExecutor() {
-        return mThreadExecutor;
-    }
-
-    /**
-     * 获取 {@link OkHttpClient.Builder#cookieJar} 方法中传入的的 {@link CookieStore} 对象
-     *
-     * @return {@link CookieStore} 对象
-     */
-    public CookieStore getCookieStore() {
-        final CookieJar cookieJar = mOkHttpClient.cookieJar();
-        if (Objects.isNull(cookieJar))
-            throw new IllegalStateException("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
-        if (cookieJar instanceof HasCookieStore)
-            return ((HasCookieStore) cookieJar).getCookieStore();
-        return null;
-    }
-
-    /**
-     * 根据设置的 TAG 取消相应的网络请求
-     */
-    public void cancelTag(Object tag) {
-        for (Call call : mOkHttpClient.dispatcher().queuedCalls())
-            if (tag.equals(call.request().tag()))
-                call.cancel();
-
-        for (Call call : mOkHttpClient.dispatcher().runningCalls())
-            if (tag.equals(call.request().tag()))
-                call.cancel();
     }
 }
