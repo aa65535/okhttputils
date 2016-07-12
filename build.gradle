@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'utils.okhttp'
-version = '2.2.0'
+version = '2.3.0'
 
 allprojects {
     repositories {
@@ -67,7 +67,7 @@ publishing {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }
 
 bintray {
