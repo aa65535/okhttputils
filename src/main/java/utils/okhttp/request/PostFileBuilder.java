@@ -3,10 +3,9 @@ package utils.okhttp.request;
 import java.io.File;
 
 import okhttp3.MediaType;
-import utils.okhttp.utils.Constants;
 import utils.okhttp.utils.Objects;
 
-public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> implements Constants {
+public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> {
     protected File file;
     protected MediaType mediaType;
 
@@ -22,7 +21,7 @@ public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> implements C
 
     @Override
     public PostFileRequest build() {
-        Objects.requireNonNull(file, "the file can not be null.");
+        Objects.requireNonNull(file, "file is null.");
         return new PostFileRequest(this);
     }
 

@@ -36,7 +36,6 @@ public abstract class OkHttpRequest {
         this.connTimeOut = builder.connTimeOut;
         this.writeTimeOut = builder.writeTimeOut;
         this.readTimeOut = builder.readTimeOut;
-        Objects.requireNonNull(url, "the url can not be null.");
         this.builder = new Builder().url(url).tag(tag).headers(headers);
     }
 

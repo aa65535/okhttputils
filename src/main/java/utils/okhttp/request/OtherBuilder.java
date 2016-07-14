@@ -2,10 +2,9 @@ package utils.okhttp.request;
 
 import okhttp3.RequestBody;
 import okhttp3.internal.http.HttpMethod;
-import utils.okhttp.utils.Constants;
 import utils.okhttp.utils.Objects;
 
-public class OtherBuilder extends OkHttpBuilder<OtherBuilder> implements Constants {
+public class OtherBuilder extends OkHttpBuilder<OtherBuilder> {
     protected String method;
     protected RequestBody requestBody;
 
@@ -22,14 +21,14 @@ public class OtherBuilder extends OkHttpBuilder<OtherBuilder> implements Constan
     @Override
     public OtherRequest build() {
         if (Objects.isNull(requestBody) && HttpMethod.requiresRequestBody(method))
-            throw new NullPointerException("requestBody and content can not be null in method:" + method);
+            throw new NullPointerException(
+                    String.format("requestBody can not be null in method: %s.", method));
         return new OtherRequest(this);
     }
 
     public OtherBuilder requestBody(String content) {
-        if (Objects.nonNull(content))
-            requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
-        return this;
+        return requestBody(RequestBody.create(MEDIA_TYPE_PLAIN,
+                Objects.requireNonNull(content, "content is null.")));
     }
 
     public OtherBuilder requestBody(RequestBody requestBody) {

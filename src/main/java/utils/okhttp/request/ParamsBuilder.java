@@ -43,7 +43,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 不可为 {@code null}
      */
     public T addParam(String name, Object value) {
-        putParam(name, Objects.requireNonNull(value, "the params [" + name + "] can not be null."));
+        putParam(name, Objects.requireNonNull(value, "params [" + name + "] is null."));
         return (T) this;
     }
 
@@ -60,7 +60,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 不可为空
      */
     public T addNonEmptyParam(String name, Object value) {
-        putParam(name, Objects.requireNonEmpty(value, "the params [" + name + "] can not be empty."));
+        putParam(name, Objects.requireNonEmpty(value, "params [" + name + "] is empty."));
         return (T) this;
     }
 

@@ -2,7 +2,7 @@ package utils.okhttp.request;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import utils.okhttp.utils.Method;
+import utils.okhttp.utils.Objects;
 
 public class OtherRequest extends OkHttpRequest {
     protected String method;
@@ -26,21 +26,8 @@ public class OtherRequest extends OkHttpRequest {
 
     @Override
     protected Request buildRequest(RequestBody requestBody) {
-        switch (method) {
-            case Method.PUT:
-                builder.put(requestBody);
-                break;
-            case Method.DELETE:
-                if (requestBody == null)
-                    builder.delete();
-                else
-                    builder.delete(requestBody);
-                break;
-            case Method.PATCH:
-                builder.patch(requestBody);
-                break;
-        }
-        return builder.build();
+        requestBody = Objects.getDefinedObject(requestBody, RequestBody.create(null, new byte[0]));
+        return builder.method(method, requestBody).build();
     }
 
     /**

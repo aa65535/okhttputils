@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import utils.okhttp.utils.Constants;
 import utils.okhttp.utils.Objects;
 
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
@@ -83,7 +82,7 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
                 return MediaType.parse(contentTypeFor);
             } catch (UnsupportedEncodingException ignored) {
             }
-            return Constants.MEDIA_TYPE_STREAM;
+            return MEDIA_TYPE_STREAM;
         }
 
         @Override

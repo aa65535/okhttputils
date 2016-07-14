@@ -19,7 +19,7 @@ public class CookieJarImpl implements CookieJar, HasCookieStore {
 
     public CookieJarImpl(CookieStore cookieStore) {
         this.lock = new ReentrantLock();
-        this.cookieStore = Objects.requireNonNull(cookieStore, "cookieStore can not be null.");
+        this.cookieStore = Objects.requireNonNull(cookieStore, "cookieStore is null.");
     }
 
     @Override

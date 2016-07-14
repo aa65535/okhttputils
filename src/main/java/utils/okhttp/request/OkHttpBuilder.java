@@ -5,11 +5,15 @@ import java.util.Map.Entry;
 
 import okhttp3.Headers;
 import okhttp3.Headers.Builder;
+import okhttp3.MediaType;
 import utils.okhttp.callback.Callback;
 import utils.okhttp.utils.Objects;
 
 @SuppressWarnings("unchecked")
 public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
+    public static final MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+    public static final MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
+
     protected String url;
     protected Object tag;
     protected Builder headers;
@@ -104,7 +108,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头
      */
     public T addHeader(String name, Object value) {
-        putHeader(name, Objects.requireNonNull(value, "the header [" + name + "] can not be null."));
+        putHeader(name, Objects.requireNonNull(value, "header [" + name + "] is null."));
         return (T) this;
     }
 
@@ -121,7 +125,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，{@code value} 不可为空
      */
     public T addNonEmptyHeader(String name, Object value) {
-        putHeader(name, Objects.requireNonEmpty(value, "the header [" + name + "] can not be empty."));
+        putHeader(name, Objects.requireNonEmpty(value, "header [" + name + "] is empty."));
         return (T) this;
     }
 

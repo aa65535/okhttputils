@@ -11,9 +11,8 @@ import utils.okhttp.request.OtherBuilder;
 import utils.okhttp.request.PostFileBuilder;
 import utils.okhttp.request.PostFormBuilder;
 import utils.okhttp.request.PostStringBuilder;
-import utils.okhttp.utils.Method;
-import utils.okhttp.utils.ThreadExecutor;
 import utils.okhttp.utils.Objects;
+import utils.okhttp.utils.ThreadExecutor;
 
 @SuppressWarnings("unused")
 public class OkHttpUtils {
@@ -138,7 +137,7 @@ public class OkHttpUtils {
      * @return {@link OtherBuilder} 对象
      */
     public static OtherBuilder put() {
-        return new OtherBuilder(Method.PUT);
+        return new OtherBuilder("PUT");
     }
 
     /**
@@ -147,7 +146,7 @@ public class OkHttpUtils {
      * @return {@link OtherBuilder} 对象
      */
     public static OtherBuilder delete() {
-        return new OtherBuilder(Method.DELETE);
+        return new OtherBuilder("DELETE");
     }
 
     /**
@@ -156,6 +155,6 @@ public class OkHttpUtils {
      * @return {@link OtherBuilder} 对象
      */
     public static OtherBuilder patch() {
-        return new OtherBuilder(Method.PATCH);
+        return new OtherBuilder("PATCH");
     }
 }

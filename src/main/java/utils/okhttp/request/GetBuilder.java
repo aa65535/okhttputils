@@ -55,7 +55,7 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
      * 获取请求的最终 URL
      */
     protected String getUrl() {
-        Objects.requireNonNull(httpUrlBuilder, "the url can not be null.");
+        Objects.requireNonNull(httpUrlBuilder, "url is null.");
         for (Entry<String, String> entry : params.entrySet())
             httpUrlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         return httpUrlBuilder.build().toString();

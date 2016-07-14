@@ -1,10 +1,9 @@
 package utils.okhttp.request;
 
 import okhttp3.MediaType;
-import utils.okhttp.utils.Constants;
 import utils.okhttp.utils.Objects;
 
-public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implements Constants {
+public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> {
     protected String content;
     protected MediaType mediaType;
 
@@ -20,7 +19,7 @@ public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> implemen
 
     @Override
     public PostStringRequest build() {
-        Objects.requireNonNull(content, "the content can not be null.");
+        Objects.requireNonNull(content, "content can not be null.");
         return new PostStringRequest(this);
     }
 
