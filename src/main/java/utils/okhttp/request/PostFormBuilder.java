@@ -1,7 +1,6 @@
 package utils.okhttp.request;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -78,9 +77,10 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
             try {
                 FileNameMap fileNameMap = URLConnection.getFileNameMap();
                 String name = Objects.getDefinedObject(filename, file.getName());
-                String contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(name, "UTF-8"));
-                return MediaType.parse(contentTypeFor);
-            } catch (UnsupportedEncodingException ignored) {
+                String contentType = fileNameMap.getContentTypeFor(URLEncoder.encode(name, "UTF-8"));
+                if (Objects.nonNull(contentType))
+                    return MediaType.parse(contentType);
+            } catch (Exception ignored) {
             }
             return MEDIA_TYPE_STREAM;
         }
