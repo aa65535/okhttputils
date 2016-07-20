@@ -2,7 +2,6 @@ package utils.okhttp.request;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import okhttp3.FormBody;
@@ -10,11 +9,12 @@ import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import utils.okhttp.OkHttpUtils;
+import utils.okhttp.request.ParamsBuilder.Params;
 import utils.okhttp.request.PostFormBuilder.FileInput;
 
 public class PostFormRequest extends OkHttpRequest {
+    protected Params params;
     protected List<FileInput> files;
-    protected Map<String, String> params;
 
     protected PostFormRequest(PostFormBuilder builder) {
         super(builder);
@@ -36,14 +36,14 @@ public class PostFormRequest extends OkHttpRequest {
 
     private RequestBody newFormBody() {
         FormBody.Builder builder = new FormBody.Builder();
-        for (Entry<String, String> entry : params.entrySet())
+        for (Entry<String, String> entry : params.entryList())
             builder.add(entry.getKey(), entry.getValue());
         return builder.build();
     }
 
     private RequestBody newMultipartBody() {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        for (Entry<String, String> entry : params.entrySet())
+        for (Entry<String, String> entry : params.entryList())
             builder.addFormDataPart(entry.getKey(), entry.getValue());
         for (FileInput input : files)
             builder.addFormDataPart(input.name, input.filename, input.fileBody());
@@ -71,16 +71,16 @@ public class PostFormRequest extends OkHttpRequest {
     }
 
     /**
-     * 返回当前实例的 {@link #files}
+     * 返回文件列表
      */
     public List<FileInput> files() {
         return Collections.unmodifiableList(files);
     }
 
     /**
-     * 返回当前实例的 {@link #params}
+     * 返回请求参数不可修改版本
      */
-    public Map<String, String> params() {
-        return Collections.unmodifiableMap(params);
+    public Params params() {
+        return params.unmodifiableParams();
     }
 }

@@ -80,18 +80,16 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      */
     public T headers(Map<String, String> headers) {
         removeAllHeaders();
-        addHeaders(headers);
-        return (T) this;
+        return addHeaders(headers);
     }
 
     /**
      * 添加请求头
      */
     public T addHeaders(Map<String, String> headers) {
-        if (Objects.nonNull(headers)) {
+        if (Objects.nonNull(headers))
             for (Entry<String, String> entry : headers.entrySet())
-                this.headers.add(entry.getKey(), entry.getValue());
-        }
+                _addHeader(entry.getKey(), entry.getValue());
         return (T) this;
     }
 
@@ -108,8 +106,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头
      */
     public T addHeader(String name, Object value) {
-        putHeader(name, Objects.requireNonNull(value, "header [" + name + "] is null."));
-        return (T) this;
+        return _addHeader(name, Objects.requireNonNull(value, "header [" + name + "] is null."));
     }
 
     /**
@@ -117,7 +114,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      */
     public T addOptionHeader(String name, Object value) {
         if (!Objects.isEmpty(value))
-            putHeader(name, value);
+            _addHeader(name, value);
         return (T) this;
     }
 
@@ -125,8 +122,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，{@code value} 不可为空
      */
     public T addNonEmptyHeader(String name, Object value) {
-        putHeader(name, Objects.requireNonEmpty(value, "header [" + name + "] is empty."));
-        return (T) this;
+        return _addHeader(name, Objects.requireNonEmpty(value, "header [" + name + "] is empty."));
     }
 
     /**
@@ -134,10 +130,8 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      */
     public T addNullableHeader(String name, Object value) {
         if (Objects.nonNull(value))
-            putHeader(name, value);
-        else
-            putHeader(name, "");
-        return (T) this;
+            return _addHeader(name, value);
+        return _addHeader(name, "");
     }
 
     /**
@@ -157,8 +151,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
         return (T) this;
     }
 
-    protected void putHeader(String name, Object value) {
+    private T _addHeader(String name, Object value) {
         headers.add(name, value.toString());
+        return (T) this;
     }
 
     /**

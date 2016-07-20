@@ -48,7 +48,7 @@ public class PostFileRequest extends OkHttpRequest {
     }
 
     /**
-     * 返回当前实例的 {@link #file}
+     * 返回待提交的文件
      */
     public File file() {
         return file;

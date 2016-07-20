@@ -31,7 +31,7 @@ public class OtherRequest extends OkHttpRequest {
     }
 
     /**
-     * 返回当前实例的 {@link #method}
+     * 返回当前实例的 {@code method}
      */
     public String method() {
         return method;

@@ -22,8 +22,8 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
 
     protected PostFormBuilder(PostFormRequest request) {
         super(request);
-        this.params(request.params);
         this.files = request.files;
+        this.params(request.params);
     }
 
     @Override

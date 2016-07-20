@@ -75,56 +75,56 @@ public abstract class OkHttpRequest {
     }
 
     /**
-     * 返回当前实例的 {@link #url}
+     * 返回当前实例的 URL 地址
      */
     public String url() {
         return url;
     }
 
     /**
-     * 返回当前实例的 {@link #tag}
+     * 返回当前实例的 {@code tag}
      */
     public Object tag() {
         return tag;
     }
 
     /**
-     * 返回当前实例的 {@link #headers}
+     * 返回当前实例的 {@code headers}
      */
     public Headers headers() {
         return headers;
     }
 
     /**
-     * 返回当前实例的 {@link #callback}
+     * 返回当前实例的 {@code callback}
      */
     public Callback callback() {
         return callback;
     }
 
     /**
-     * 返回当前实例的 {@link #connTimeOut}
+     * 返回当前实例的连接超时，单位 ms
      */
     public long connTimeOut() {
         return connTimeOut;
     }
 
     /**
-     * 返回当前实例的 {@link #writeTimeOut}
+     * 返回当前实例的写入超时，单位 ms
      */
     public long writeTimeOut() {
         return writeTimeOut;
     }
 
     /**
-     * 返回当前实例的 {@link #readTimeOut}
+     * 返回当前实例的读取超时，单位 ms
      */
     public long readTimeOut() {
         return readTimeOut;
     }
 
     /**
-     * 返回当前实例的 {@link #call} 对象
+     * 返回当前实例的 {@link Call} 对象
      */
     public synchronized Call call() {
         if (Objects.nonNull(call))
@@ -149,7 +149,7 @@ public abstract class OkHttpRequest {
     }
 
     /**
-     * 执行异步网络请求，期间会调用 {@link #callback} 的相关方法
+     * 执行异步网络请求，期间会调用 {@code callback} 的相关方法
      */
     public void execute() {
         if (call().isExecuted())

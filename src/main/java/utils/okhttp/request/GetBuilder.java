@@ -1,6 +1,5 @@
 package utils.okhttp.request;
 
-import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import okhttp3.HttpUrl;
@@ -26,21 +25,15 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
     @Override
     public GetBuilder url(String url) {
         if (Objects.isNull(params))
-            params = new LinkedHashMap<>();
+            params = new Params();
         HttpUrl httpUrl = HttpUrl.parse(url);
         httpUrlBuilder = httpUrl.newBuilder();
         for (String name : httpUrl.queryParameterNames()) {
             httpUrlBuilder.removeAllQueryParameters(name);
-            addParam(name, httpUrl.queryParameter(name));
+            for (String value : httpUrl.queryParameterValues(name))
+                addParam(name, value);
         }
         return this;
-    }
-
-    /**
-     * 设置指定 {@code name} 的请求参数值
-     */
-    public GetBuilder setParam(String name, Object value) {
-        return super.addParam(name, value);
     }
 
     /**
@@ -56,7 +49,7 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
      */
     protected String getUrl() {
         Objects.requireNonNull(httpUrlBuilder, "url is null.");
-        for (Entry<String, String> entry : params.entrySet())
+        for (Entry<String, String> entry : params.entryList())
             httpUrlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         return httpUrlBuilder.build().toString();
     }

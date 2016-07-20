@@ -30,7 +30,7 @@ public class PostStringRequest extends OkHttpRequest {
     }
 
     /**
-     * 返回当前实例的 {@link #content}
+     * 返回待提交的字符串
      */
     public String content() {
         return content;
