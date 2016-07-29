@@ -22,4 +22,9 @@ public class GetRequest extends OkHttpRequest {
     protected Request buildRequest(RequestBody requestBody) {
         return builder.get().build();
     }
+
+    @Override
+    public String method() {
+        return "GET";
+    }
 }

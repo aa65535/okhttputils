@@ -17,4 +17,9 @@ public class HeadRequest extends GetRequest {
     protected Request buildRequest(RequestBody requestBody) {
         return builder.head().build();
     }
+
+    @Override
+    public String method() {
+        return "HEAD";
+    }
 }

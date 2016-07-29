@@ -20,6 +20,11 @@ public class PostStringRequest extends OkHttpRequest {
     }
 
     @Override
+    public String method() {
+        return "POST";
+    }
+
+    @Override
     protected RequestBody buildRequestBody() {
         return RequestBody.create(mediaType, content);
     }

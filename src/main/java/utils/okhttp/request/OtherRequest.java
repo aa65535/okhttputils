@@ -30,9 +30,6 @@ public class OtherRequest extends OkHttpRequest {
         return builder.method(method, requestBody).build();
     }
 
-    /**
-     * 返回当前实例的 {@code method}
-     */
     public String method() {
         return method;
     }

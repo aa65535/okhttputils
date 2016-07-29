@@ -44,6 +44,11 @@ public abstract class OkHttpRequest {
      */
     public abstract OkHttpBuilder newBuilder();
 
+    /**
+     * 返回当前请求的谓词
+     */
+    public abstract String method();
+
     protected abstract RequestBody buildRequestBody();
 
     protected abstract Request buildRequest(RequestBody requestBody);

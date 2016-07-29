@@ -28,6 +28,11 @@ public class PostFormRequest extends OkHttpRequest {
     }
 
     @Override
+    public String method() {
+        return "POST";
+    }
+
+    @Override
     protected RequestBody buildRequestBody() {
         if (files.isEmpty())
             return newFormBody();
