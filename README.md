@@ -9,7 +9,7 @@ A Java utils library for [OkHttp][0]. For more information see the [Wiki][1].
 Gradle:
 
 ```
-compile 'utils.okhttp:okhttputils:2.3.0'
+compile 'utils.okhttp:okhttputils:2.4.0'
 ```
 
 Maven:
@@ -18,7 +18,7 @@ Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>2.3.0</version>
+  <version>2.4.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -26,7 +26,7 @@ Maven:
 Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='2.3.0'>
+<dependency org='utils.okhttp' name='okhttputils' rev='2.4.0'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
