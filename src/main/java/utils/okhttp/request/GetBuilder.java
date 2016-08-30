@@ -41,7 +41,8 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
      */
     @Override
     public GetBuilder addParam(String name, Object value) {
-        return addNullableParam(name, value);
+        params.add(name, Objects.isNull(value) ? null : value.toString());
+        return this;
     }
 
     /**

@@ -1,4 +1,4 @@
-package utils.okhttp.https;
+package utils.okhttp.utils;
 
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -25,7 +25,7 @@ import utils.okhttp.utils.Objects;
 /**
  * Https 证书工具类
  */
-public class HttpsUtils {
+public final class HttpsUtils {
     /**
      * 获取一个 {@link SSLParams} 对象， 其中包含 {@link SSLSocketFactory} 对象 和 {@link X509TrustManager} 对象
      * <br/>设置可访问所有的 https 网站时可以全部参数都传入 {@code null}

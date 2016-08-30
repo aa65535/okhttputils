@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class ThreadExecutor {
+public final class ThreadExecutor {
     private final Executor executor;
 
     public ThreadExecutor() {

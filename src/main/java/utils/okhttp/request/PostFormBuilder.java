@@ -31,6 +31,12 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
         return new PostFormRequest(this);
     }
 
+    @Override
+    public PostFormBuilder addParam(String name, Object value) {
+        params.add(name, Objects.requireNonNull(value, "params [" + name + "] is null.").toString());
+        return this;
+    }
+
     /**
      * 添加一个待提交的文件映射表
      *

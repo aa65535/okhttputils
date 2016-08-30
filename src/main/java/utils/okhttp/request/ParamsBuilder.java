@@ -48,22 +48,21 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
     public T addParams(Map<String, String> params) {
         if (Objects.nonNull(params))
             for (Entry<String, String> entry : params.entrySet())
-                _addParam(entry.getKey(), entry.getValue());
+                addParam(entry.getKey(), entry.getValue());
         return (T) this;
     }
 
     /**
-     * 添加请求参数， {@code value} 不可为 {@code null}
+     * 添加请求参数
      */
-    public T addParam(String name, Object value) {
-        return _addParam(name, Objects.requireNonNull(value, "params [" + name + "] is null."));
-    }
+    public abstract T addParam(String name, Object value);
 
     /**
      * 设置请求参数， {@code value} 不可为 {@code null}
      */
     public T setParam(String name, Object value) {
-        return _setParam(name, Objects.requireNonNull(value, "params [" + name + "] is null."));
+        params.set(name, Objects.requireNonNull(value, "params [" + name + "] is null.").toString());
+        return (T) this;
     }
 
     /**
@@ -71,7 +70,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      */
     public T addOptionParam(String name, Object value) {
         if (!Objects.isEmpty(value))
-            _addParam(name, value);
+            addParam(name, value);
         return (T) this;
     }
 
@@ -79,7 +78,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 不可为空
      */
     public T addNonEmptyParam(String name, Object value) {
-        return _addParam(name, Objects.requireNonEmpty(value, "params [" + name + "] is empty."));
+        return addParam(name, Objects.requireNonEmpty(value, "params [" + name + "] is empty."));
     }
 
     /**
@@ -87,8 +86,8 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      */
     public T addNullableParam(String name, Object value) {
         if (Objects.nonNull(value))
-            return _addParam(name, value);
-        return _addParam(name, "");
+            return addParam(name, value);
+        return addParam(name, "");
     }
 
     /**
@@ -104,16 +103,6 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      */
     public T removeAllParam() {
         params.clear();
-        return (T) this;
-    }
-
-    private T _setParam(String name, Object value) {
-        params.set(name, value.toString());
-        return (T) this;
-    }
-
-    private T _addParam(String name, Object value) {
-        params.add(name, value.toString());
         return (T) this;
     }
 
@@ -179,9 +168,8 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          */
         public String get(String name) {
             for (int i = namesAndValues.size() - 2; i >= 0; i -= 2) {
-                if (name.equals(namesAndValues.get(i))) {
+                if (name.equals(namesAndValues.get(i)))
                     return namesAndValues.get(i + 1);
-                }
             }
             return null;
         }
@@ -223,9 +211,8 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          */
         public Set<String> names() {
             TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-            for (int i = 0, size = size(); i < size; i++) {
+            for (int i = 0, size = size(); i < size; i++)
                 result.add(name(i));
-            }
             return Collections.unmodifiableSet(result);
         }
 
