@@ -31,6 +31,9 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
         return new PostFormRequest(this);
     }
 
+    /**
+     * 添加请求参数， {@code value} 不可为 {@code null}
+     */
     @Override
     public PostFormBuilder addParam(String name, Object value) {
         params.add(name, Objects.requireNonNull(value, "params [" + name + "] is null.").toString());

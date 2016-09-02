@@ -37,7 +37,7 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
     }
 
     /**
-     * 添加请求参数， {@code value} 为 {@code null} 时添加空字符串
+     * 添加请求参数， {@code value} 为 {@code null} 时添加为 &name，否则为 &name=value
      */
     @Override
     public GetBuilder addParam(String name, Object value) {
