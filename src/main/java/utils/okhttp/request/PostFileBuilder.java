@@ -28,7 +28,7 @@ public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> {
     /**
      * 设置待上传的文件
      */
-    public OkHttpBuilder file(File file) {
+    public PostFileBuilder file(File file) {
         this.file = file;
         return this;
     }
@@ -36,7 +36,7 @@ public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> {
     /**
      * 设置请求的 {@link MediaType}，默认是 {@code application/octet-stream}
      */
-    public OkHttpBuilder mediaType(MediaType mediaType) {
+    public PostFileBuilder mediaType(MediaType mediaType) {
         this.mediaType = mediaType;
         return this;
     }
