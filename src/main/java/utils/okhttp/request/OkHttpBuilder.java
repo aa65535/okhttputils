@@ -157,6 +157,13 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     }
 
     /**
+     * 设置 User-Agent
+     */
+    public T userAgent(String value) {
+        return setHeader("User-Agent", value);
+    }
+
+    /**
      * 设置本次请求的连接超时，单位毫秒
      */
     public T connTimeOut(long connTimeOut) {
