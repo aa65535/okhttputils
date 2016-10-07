@@ -10,25 +10,46 @@ import utils.okhttp.OkHttpUtils;
 
 @SuppressWarnings("unused")
 public abstract class FileCallBack extends Callback<File> {
+    private static int DEFAULT_BUFFER_SIZE = 8192;
+
     private File destFileDir;
     private String fileName;
-
-    /**
-     * @param destFileDir 文件保存的目录
-     * @param fileName    文件名
-     */
-    public FileCallBack(File destFileDir, String fileName) {
-        this.destFileDir = destFileDir;
-        this.fileName = fileName;
-    }
+    private int bufferSize;
 
     /**
      * @param destFileDir 文件保存的目录
      * @param fileName    文件名
      */
     public FileCallBack(String destFileDir, String fileName) {
-        this.destFileDir = new File(destFileDir);
+        this(destFileDir, fileName, DEFAULT_BUFFER_SIZE);
+    }
+
+    /**
+     * @param destFileDir 文件保存的目录
+     * @param fileName    文件名
+     */
+    public FileCallBack(File destFileDir, String fileName) {
+        this(destFileDir, fileName, DEFAULT_BUFFER_SIZE);
+    }
+
+    /**
+     * @param destFileDir 文件保存的目录
+     * @param fileName    文件名
+     */
+    public FileCallBack(String destFileDir, String fileName, int bufferSize) {
+        this(new File(destFileDir), fileName, bufferSize);
+    }
+
+    /**
+     * @param destFileDir 文件保存的目录
+     * @param fileName    文件名
+     */
+    public FileCallBack(File destFileDir, String fileName, int bufferSize) {
+        this.destFileDir = destFileDir;
         this.fileName = fileName;
+        if (bufferSize <= 0)
+            throw new IllegalArgumentException("Buffer size <= 0");
+        this.bufferSize = bufferSize;
     }
 
     /**
@@ -44,7 +65,7 @@ public abstract class FileCallBack extends Callback<File> {
     public File parseNetworkResponse(Response response) throws Exception {
         InputStream is = null;
         FileOutputStream fos = null;
-        byte[] buf = new byte[2048];
+        byte[] buf = new byte[bufferSize];
         int len;
         try {
             is = response.body().byteStream();
