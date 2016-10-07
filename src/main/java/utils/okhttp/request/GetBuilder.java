@@ -6,6 +6,7 @@ import okhttp3.HttpUrl;
 import okhttp3.HttpUrl.Builder;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class GetBuilder extends ParamsBuilder<GetBuilder> {
     protected Builder httpUrlBuilder;
 

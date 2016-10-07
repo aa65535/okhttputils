@@ -8,6 +8,7 @@ import okhttp3.Response;
 import okhttp3.internal.Util;
 import utils.okhttp.OkHttpUtils;
 
+@SuppressWarnings("unused")
 public abstract class FileCallBack extends Callback<File> {
     private File destFileDir;
     private String fileName;

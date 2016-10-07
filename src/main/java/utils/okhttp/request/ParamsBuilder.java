@@ -14,7 +14,7 @@ import utils.okhttp.utils.Objects;
  * 携带请求参数的 Builder
  * 对于 POST 请求是添加到请求体，对于 GET 请求则添加到 URL 的 query 中
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuilder<T> {
     protected Params params;
 

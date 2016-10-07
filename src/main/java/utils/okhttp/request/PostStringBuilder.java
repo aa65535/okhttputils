@@ -3,6 +3,7 @@ package utils.okhttp.request;
 import okhttp3.MediaType;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class PostStringBuilder extends OkHttpBuilder<PostStringBuilder> {
     protected String content;
     protected MediaType mediaType;

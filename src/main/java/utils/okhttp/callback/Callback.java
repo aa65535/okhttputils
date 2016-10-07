@@ -9,6 +9,7 @@ import okhttp3.Response;
  *
  * @param <T> 指示 {@link #parseNetworkResponse} 方法返回的类型
  */
+@SuppressWarnings("unused")
 public abstract class Callback<T> {
     /**
      * 默认 Callback 实例，当异步请求没有传入 Callback 实例时调用

@@ -4,6 +4,7 @@ import okhttp3.RequestBody;
 import okhttp3.internal.http.HttpMethod;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class OtherBuilder extends OkHttpBuilder<OtherBuilder> {
     protected String method;
     protected RequestBody requestBody;

@@ -5,6 +5,7 @@ import java.util.List;
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
+@SuppressWarnings("unused")
 public interface CookieStore {
     /**
      * 将一个 cookie 添加到存储区中。为每个传入的 HTTP 响应调用此方法。

@@ -1,5 +1,6 @@
 package utils.okhttp.request;
 
+@SuppressWarnings("unused")
 public class HeadBuilder extends GetBuilder {
     public HeadBuilder() {
     }

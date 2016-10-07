@@ -3,6 +3,7 @@ package utils.okhttp.request;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+@SuppressWarnings("unused")
 public class GetRequest extends OkHttpRequest {
     protected GetRequest(GetBuilder builder) {
         super(builder);

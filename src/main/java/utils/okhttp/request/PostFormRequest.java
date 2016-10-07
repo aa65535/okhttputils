@@ -12,6 +12,7 @@ import utils.okhttp.OkHttpUtils;
 import utils.okhttp.request.ParamsBuilder.Params;
 import utils.okhttp.request.PostFormBuilder.FileInput;
 
+@SuppressWarnings("unused")
 public class PostFormRequest extends OkHttpRequest {
     protected Params params;
     protected List<FileInput> files;

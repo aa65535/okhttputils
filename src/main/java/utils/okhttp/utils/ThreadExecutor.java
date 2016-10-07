@@ -1,10 +1,10 @@
 package utils.okhttp.utils;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("unused")
 public final class ThreadExecutor {
     private final Executor executor;
 
@@ -38,10 +38,9 @@ public final class ThreadExecutor {
         public AndroidThreadExecutor() throws Exception {
             Class<?> looperClass = Class.forName("android.os.Looper");
             Class<?> handlerClass = Class.forName("android.os.Handler");
-            Method getMainLooperMethod = looperClass.getDeclaredMethod("getMainLooper");
-            Object looper = getMainLooperMethod.invoke(null);
-            Constructor<?> handlerConstructor = handlerClass.getConstructor(looperClass);
-            handler = handlerConstructor.newInstance(looper);
+            handler = handlerClass.getConstructor(looperClass).newInstance(
+                    looperClass.getDeclaredMethod("getMainLooper").invoke(null)
+            );
             postMethod = handlerClass.getDeclaredMethod("post", Runnable.class);
         }
 

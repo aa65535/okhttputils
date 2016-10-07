@@ -13,6 +13,7 @@ import utils.okhttp.utils.Objects;
 /**
  * 对 {@link CookieJar} 的包装
  */
+@SuppressWarnings("unused")
 public class CookieJarImpl implements CookieJar, HasCookieStore {
     private final ReentrantLock lock;
     private final CookieStore cookieStore;

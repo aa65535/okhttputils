@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public final class Objects {
     /**
      * 判断两个对象是否相等

@@ -13,6 +13,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     protected List<FileInput> files;
 

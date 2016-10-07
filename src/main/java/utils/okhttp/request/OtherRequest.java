@@ -4,6 +4,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class OtherRequest extends OkHttpRequest {
     protected String method;
     protected RequestBody requestBody;

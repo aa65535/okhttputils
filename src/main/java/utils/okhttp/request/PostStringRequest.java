@@ -4,6 +4,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+@SuppressWarnings("unused")
 public class PostStringRequest extends OkHttpRequest {
     protected String content;
     protected MediaType mediaType;

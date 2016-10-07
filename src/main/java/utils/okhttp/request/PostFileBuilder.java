@@ -5,6 +5,7 @@ import java.io.File;
 import okhttp3.MediaType;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class PostFileBuilder extends OkHttpBuilder<PostFileBuilder> {
     protected File file;
     protected MediaType mediaType;

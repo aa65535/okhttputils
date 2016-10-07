@@ -15,7 +15,7 @@ import utils.okhttp.OkHttpUtils;
 import utils.okhttp.callback.Callback;
 import utils.okhttp.utils.Objects;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public abstract class OkHttpRequest {
     protected String url;
     protected Object tag;

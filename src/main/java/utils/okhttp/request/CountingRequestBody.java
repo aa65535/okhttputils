@@ -10,6 +10,7 @@ import okio.ForwardingSink;
 import okio.Okio;
 import okio.Sink;
 
+@SuppressWarnings("unused")
 public class CountingRequestBody extends RequestBody {
     protected Listener listener;
     protected RequestBody delegate;

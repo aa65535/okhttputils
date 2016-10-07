@@ -20,11 +20,11 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.internal.Util;
-import utils.okhttp.utils.Objects;
 
 /**
  * Https 证书工具类
  */
+@SuppressWarnings("unused")
 public final class HttpsUtils {
     /**
      * 获取一个 {@link SSLParams} 对象， 其中包含 {@link SSLSocketFactory} 对象 和 {@link X509TrustManager} 对象

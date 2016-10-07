@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import utils.okhttp.OkHttpUtils;
 
+@SuppressWarnings("unused")
 public class PostFileRequest extends OkHttpRequest {
     protected File file;
     protected MediaType mediaType;

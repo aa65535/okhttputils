@@ -9,7 +9,7 @@ import okhttp3.MediaType;
 import utils.okhttp.callback.Callback;
 import utils.okhttp.utils.Objects;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     public static final MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
     public static final MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");

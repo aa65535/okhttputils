@@ -9,6 +9,7 @@ import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 import utils.okhttp.utils.Objects;
 
+@SuppressWarnings("unused")
 public class MemoryCookieStore implements CookieStore {
     private final List<Cookie> cookieJar;
 
