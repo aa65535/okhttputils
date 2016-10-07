@@ -13,6 +13,8 @@ import utils.okhttp.utils.Objects;
 public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     public static final MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
     public static final MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
+    public static final MediaType MEDIA_TYPE_XML = MediaType.parse("application/xml;charset=utf-8");
 
     protected String url;
     protected Object tag;
