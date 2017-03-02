@@ -10,7 +10,7 @@ import utils.okhttp.OkHttpUtils;
 
 @SuppressWarnings("unused")
 public abstract class FileCallBack extends Callback<File> {
-    private static int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int BUFFER_SIZE = 8192;
 
     private File destFileDir;
     private String fileName;
@@ -21,7 +21,7 @@ public abstract class FileCallBack extends Callback<File> {
      * @param fileName    文件名
      */
     public FileCallBack(String destFileDir, String fileName) {
-        this(destFileDir, fileName, DEFAULT_BUFFER_SIZE);
+        this(destFileDir, fileName, BUFFER_SIZE);
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class FileCallBack extends Callback<File> {
      * @param fileName    文件名
      */
     public FileCallBack(File destFileDir, String fileName) {
-        this(destFileDir, fileName, DEFAULT_BUFFER_SIZE);
+        this(destFileDir, fileName, BUFFER_SIZE);
     }
 
     /**
