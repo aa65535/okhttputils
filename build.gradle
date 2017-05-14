@@ -5,11 +5,11 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.6"
+    id "com.jfrog.bintray" version "1.7.3"
 }
 
 group = 'utils.okhttp'
-version = '2.4.3'
+version = '2.4.4'
 
 allprojects {
     repositories {
@@ -67,18 +67,19 @@ publishing {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    testCompile 'com.google.code.gson:gson:2.8.0'
 }
 
 bintray {
     if (project.rootProject.file('local.properties').exists()) {
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
-        user = properties.getProperty("bintray.user")
-        key = properties.getProperty("bintray.apikey")
+        user = properties.getProperty('bintray.user')
+        key = properties.getProperty('bintray.apikey')
     } else {
-        user = System.getenv("bintray.user")
-        key = System.getenv("bintray.apikey")
+        user = System.getenv('bintray.user')
+        key = System.getenv('bintray.apikey')
     }
     publications = ['mavenJava']
     pkg {
@@ -94,5 +95,5 @@ bintray {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '3.3'
 }

@@ -1,16 +1,18 @@
-#OkHttpUtils
+OkHttpUtils
+===
 
 A Java utils library for [OkHttp][0]. For more information see the [Wiki][1].
 
 [![Download][3]][2]
 [![Build Status][5]][4]
 
-#Binaries
+Binaries
+===
 
 Gradle:
 
 ```
-compile 'utils.okhttp:okhttputils:2.4.3'
+compile 'utils.okhttp:okhttputils:2.4.4'
 ```
 
 Maven:
@@ -19,7 +21,7 @@ Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>2.4.3</version>
+  <version>2.4.4</version>
   <type>pom</type>
 </dependency>
 ```
@@ -27,12 +29,13 @@ Maven:
 Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='2.4.3'>
+<dependency org='utils.okhttp' name='okhttputils' rev='2.4.4'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
 
-#ProGuard
+ProGuard
+===
 
 ```
 #OkHttpUtils
@@ -54,7 +57,8 @@ Ivy:
 -dontwarn okio.**
 ```
 
-#License
+License
+===
 
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
