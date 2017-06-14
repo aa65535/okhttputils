@@ -96,7 +96,7 @@ public final class Objects {
     }
 
     /**
-     * 检查一个对象是否为空，如果为空，则抛出 {@link NullPointerException}，否则返回此对象
+     * 检查一个对象是否为空，如果为空，则抛出 {@link IllegalArgumentException}，否则返回此对象
      *
      * @param obj 待检查的对象
      */
