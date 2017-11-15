@@ -209,6 +209,7 @@ public abstract class OkHttpRequest {
                         return;
                     }
                     if (!response.isSuccessful()) {
+                        //noinspection ConstantConditions
                         sendFailResultCallback(call, new RuntimeException(response.body().string()), callback);
                         return;
                     }

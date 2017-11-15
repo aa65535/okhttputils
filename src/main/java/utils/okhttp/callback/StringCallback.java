@@ -8,6 +8,7 @@ import okhttp3.Response;
 public abstract class StringCallback extends Callback<String> {
     @Override
     public String parseNetworkResponse(Response response) throws IOException {
+        //noinspection ConstantConditions
         return response.body().string();
     }
 }

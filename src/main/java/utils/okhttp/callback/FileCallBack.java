@@ -12,15 +12,14 @@ import utils.okhttp.OkHttpUtils;
 public abstract class FileCallBack extends Callback<File> {
     private static final int BUFFER_SIZE = 8192;
 
-    private File destFileDir;
-    private String fileName;
+    private File destFile;
     private int bufferSize;
 
     /**
      * @param destFile    目标文件
      */
     public FileCallBack(File destFile) {
-        this(destFile.getParentFile(), destFile.getName());
+        this(destFile, BUFFER_SIZE);
     }
 
     /**
@@ -45,7 +44,10 @@ public abstract class FileCallBack extends Callback<File> {
      * @param bufferSize  缓存区大小
      */
     public FileCallBack(File destFile, int bufferSize) {
-        this(destFile.getParentFile(), destFile.getName(), bufferSize);
+        this.destFile = destFile;
+        if (bufferSize <= 0)
+            throw new IllegalArgumentException("Buffer size <= 0");
+        this.bufferSize = bufferSize;
     }
 
     /**
@@ -54,7 +56,7 @@ public abstract class FileCallBack extends Callback<File> {
      * @param bufferSize  缓存区大小
      */
     public FileCallBack(String destFileDir, String fileName, int bufferSize) {
-        this(new File(destFileDir), fileName, bufferSize);
+        this(new File(destFileDir, fileName), bufferSize);
     }
 
     /**
@@ -63,11 +65,7 @@ public abstract class FileCallBack extends Callback<File> {
      * @param bufferSize  缓存区大小
      */
     public FileCallBack(File destFileDir, String fileName, int bufferSize) {
-        this.destFileDir = destFileDir;
-        this.fileName = fileName;
-        if (bufferSize <= 0)
-            throw new IllegalArgumentException("Buffer size <= 0");
-        this.bufferSize = bufferSize;
+        this(new File(destFileDir, fileName), bufferSize);
     }
 
     /**
@@ -86,7 +84,7 @@ public abstract class FileCallBack extends Callback<File> {
         byte[] buf = new byte[bufferSize];
         int len;
         try {
-            is = response.body().byteStream();
+            //noinspection ConstantConditions
             final long total = response.body().contentLength();
             long sum = 0;
             OkHttpUtils.getInstance().getThreadExecutor().execute(new Runnable() {
@@ -96,9 +94,10 @@ public abstract class FileCallBack extends Callback<File> {
                 }
             });
             //noinspection ResultOfMethodCallIgnored
-            destFileDir.mkdirs();
-            File file = new File(destFileDir, fileName);
-            fos = new FileOutputStream(file);
+            destFile.getParentFile().mkdirs();
+            //noinspection ConstantConditions
+            is = response.body().byteStream();
+            fos = new FileOutputStream(destFile);
             while ((len = is.read(buf)) != -1) {
                 fos.write(buf, 0, len);
                 final long finalSum = (sum += len);
@@ -110,7 +109,7 @@ public abstract class FileCallBack extends Callback<File> {
                 });
             }
             fos.flush();
-            return file;
+            return destFile;
         } finally {
             Util.closeQuietly(is);
             Util.closeQuietly(fos);
