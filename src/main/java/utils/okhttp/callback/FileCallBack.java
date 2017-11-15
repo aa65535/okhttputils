@@ -17,6 +17,13 @@ public abstract class FileCallBack extends Callback<File> {
     private int bufferSize;
 
     /**
+     * @param destFile    目标文件
+     */
+    public FileCallBack(File destFile) {
+        this(destFile.getParentFile(), destFile.getName());
+    }
+
+    /**
      * @param destFileDir 文件保存的目录
      * @param fileName    文件名
      */
@@ -33,8 +40,18 @@ public abstract class FileCallBack extends Callback<File> {
     }
 
     /**
+     *
+     * @param destFile    目标文件
+     * @param bufferSize  缓存区大小
+     */
+    public FileCallBack(File destFile, int bufferSize) {
+        this(destFile.getParentFile(), destFile.getName(), bufferSize);
+    }
+
+    /**
      * @param destFileDir 文件保存的目录
      * @param fileName    文件名
+     * @param bufferSize  缓存区大小
      */
     public FileCallBack(String destFileDir, String fileName, int bufferSize) {
         this(new File(destFileDir), fileName, bufferSize);
@@ -43,6 +60,7 @@ public abstract class FileCallBack extends Callback<File> {
     /**
      * @param destFileDir 文件保存的目录
      * @param fileName    文件名
+     * @param bufferSize  缓存区大小
      */
     public FileCallBack(File destFileDir, String fileName, int bufferSize) {
         this.destFileDir = destFileDir;

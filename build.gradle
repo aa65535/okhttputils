@@ -5,11 +5,11 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.7.3"
+    id "com.jfrog.bintray" version "1.8.0"
 }
 
 group = 'utils.okhttp'
-version = '2.4.4'
+version = '2.4.5'
 
 allprojects {
     repositories {
@@ -67,8 +67,8 @@ publishing {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    testCompile 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    testImplementation 'com.google.code.gson:gson:2.8.2'
 }
 
 bintray {
@@ -95,5 +95,5 @@ bintray {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '4.1'
 }
