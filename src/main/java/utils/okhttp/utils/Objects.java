@@ -50,16 +50,21 @@ public final class Objects {
      * @param object 待检查的对象
      */
     public static boolean isEmpty(Object object) {
-        if (isNull(object))
+        if (isNull(object)) {
             return true;
-        if (object instanceof CharSequence)
+        }
+        if (object instanceof CharSequence) {
             return 0 == ((CharSequence) object).length();
-        if (object instanceof Number)
+        }
+        if (object instanceof Number) {
             return 0 == ((Number) object).doubleValue();
-        if (object instanceof Collection)
+        }
+        if (object instanceof Collection) {
             return ((Collection) object).isEmpty();
-        if (object instanceof Map)
+        }
+        if (object instanceof Map) {
             return ((Map) object).isEmpty();
+        }
         return object.getClass().isArray() && 0 == Array.getLength(object);
     }
 
@@ -80,7 +85,7 @@ public final class Objects {
      * @param obj 待检查的对象
      */
     public static <T> T requireNonNull(T obj) {
-        return requireNonNull(obj, null);
+        return requireNonNull(obj, new NullPointerException());
     }
 
     /**
@@ -90,8 +95,19 @@ public final class Objects {
      * @param obj 待检查的对象
      */
     public static <T> T requireNonNull(T obj, String message) {
-        if (isNull(obj))
-            throw new NullPointerException(message);
+        return requireNonNull(obj, new NullPointerException(message));
+    }
+
+    /**
+     * 检查一个对象是否为 {@code null}，如果为 {@code null}，
+     * 则抛出一个自定义异常，否则返回此对象
+     *
+     * @param obj 待检查的对象
+     */
+    public static <T> T requireNonNull(T obj, RuntimeException e) {
+        if (isNull(obj)) {
+            throw e;
+        }
         return obj;
     }
 
@@ -101,7 +117,7 @@ public final class Objects {
      * @param obj 待检查的对象
      */
     public static <T> T requireNonEmpty(T obj) {
-        return requireNonEmpty(obj, null);
+        return requireNonEmpty(obj, new IllegalArgumentException());
     }
 
     /**
@@ -110,8 +126,18 @@ public final class Objects {
      * @param obj 待检查的对象
      */
     public static <T> T requireNonEmpty(T obj, String message) {
-        if (isEmpty(obj))
-            throw new IllegalArgumentException(message);
+        return requireNonEmpty(obj, new IllegalArgumentException(message));
+    }
+
+    /**
+     * 检查一个对象是否为空，如果为空，则抛出一个自定义异常，否则返回此对象
+     *
+     * @param obj 待检查的对象
+     */
+    public static <T> T requireNonEmpty(T obj, RuntimeException e) {
+        if (isEmpty(obj)) {
+            throw e;
+        }
         return obj;
     }
 }

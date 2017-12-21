@@ -21,9 +21,10 @@ public class OtherBuilder extends OkHttpBuilder<OtherBuilder> {
 
     @Override
     public OtherRequest build() {
-        if (Objects.isNull(requestBody) && HttpMethod.requiresRequestBody(method))
+        if (Objects.isNull(requestBody) && HttpMethod.requiresRequestBody(method)) {
             throw new NullPointerException(
                     String.format("requestBody can not be null in method: %s.", method));
+        }
         return new OtherRequest(this);
     }
 

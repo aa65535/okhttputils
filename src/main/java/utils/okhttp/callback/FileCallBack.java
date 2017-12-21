@@ -45,8 +45,9 @@ public abstract class FileCallBack extends Callback<File> {
      */
     public FileCallBack(File destFile, int bufferSize) {
         this.destFile = destFile;
-        if (bufferSize <= 0)
+        if (bufferSize <= 0) {
             throw new IllegalArgumentException("Buffer size <= 0");
+        }
         this.bufferSize = bufferSize;
     }
 

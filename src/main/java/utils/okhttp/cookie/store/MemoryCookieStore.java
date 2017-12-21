@@ -21,17 +21,20 @@ public class MemoryCookieStore implements CookieStore {
     public void add(HttpUrl url, Cookie cookie) {
         Objects.requireNonNull(cookie, "cookie is null");
         remove(cookie);
-        if (!isExpired(cookie))
+        if (!isExpired(cookie)) {
             cookieJar.add(cookie);
+        }
     }
 
     @Override
     public List<Cookie> get(HttpUrl url) {
         Objects.requireNonNull(url, "url is null");
         List<Cookie> cookies = new ArrayList<>();
-        for (Cookie cookie : unexpired())
-            if (cookie.matches(url))
+        for (Cookie cookie : unexpired()) {
+            if (cookie.matches(url)) {
                 cookies.add(cookie);
+            }
+        }
         return Collections.unmodifiableList(cookies);
     }
 
@@ -44,11 +47,12 @@ public class MemoryCookieStore implements CookieStore {
     public boolean remove(Cookie cookie) {
         Objects.requireNonNull(cookie, "cookie is null");
         Iterator<Cookie> it = cookieJar.iterator();
-        while (it.hasNext())
+        while (it.hasNext()) {
             if (equals(it.next(), cookie)) {
                 it.remove();
                 return true;
             }
+        }
         return false;
     }
 
@@ -63,9 +67,11 @@ public class MemoryCookieStore implements CookieStore {
 
     private List<Cookie> unexpired() {
         Iterator<Cookie> it = cookieJar.iterator();
-        while (it.hasNext())
-            if (isExpired(it.next()))
+        while (it.hasNext()) {
+            if (isExpired(it.next())) {
                 it.remove();
+            }
+        }
         return cookieJar;
     }
 

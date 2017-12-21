@@ -42,6 +42,15 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     }
 
     /**
+     * 设置请求参数， {@code value} 不可为 {@code null}
+     */
+    @Override
+    public PostFormBuilder setParam(String name, Object value) {
+        params.set(name, Objects.requireNonNull(value, "params [" + name + "] is null.").toString());
+        return this;
+    }
+
+    /**
      * 添加一个待提交的文件映射表
      *
      * @param name  From 字段名称
@@ -50,8 +59,9 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     public PostFormBuilder addFiles(String name, Map<String, File> files) {
         if (Objects.nonNull(files)) {
             this.files.clear();
-            for (Entry<String, File> entry : files.entrySet())
+            for (Entry<String, File> entry : files.entrySet()) {
                 addFile(name, entry.getKey(), entry.getValue());
+            }
         }
         return this;
     }
@@ -88,8 +98,9 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
                 FileNameMap fileNameMap = URLConnection.getFileNameMap();
                 String name = Objects.getDefinedObject(filename, file.getName());
                 String contentType = fileNameMap.getContentTypeFor(URLEncoder.encode(name, "UTF-8"));
-                if (Objects.nonNull(contentType))
+                if (Objects.nonNull(contentType)) {
                     return MediaType.parse(contentType);
+                }
             } catch (Exception ignored) {
             }
             return MEDIA_TYPE_STREAM;

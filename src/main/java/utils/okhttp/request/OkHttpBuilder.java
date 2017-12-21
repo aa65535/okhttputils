@@ -64,8 +64,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 设置求请的回调
      */
     public T callback(Callback callback) {
-        if (Objects.nonNull(callback))
+        if (Objects.nonNull(callback)) {
             this.callback = callback;
+        }
         return (T) this;
     }
 
@@ -89,9 +90,11 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加请求头
      */
     public T addHeaders(Map<String, String> headers) {
-        if (Objects.nonNull(headers))
-            for (Entry<String, String> entry : headers.entrySet())
+        if (Objects.nonNull(headers)) {
+            for (Entry<String, String> entry : headers.entrySet()) {
                 _addHeader(entry.getKey(), entry.getValue());
+            }
+        }
         return (T) this;
     }
 
@@ -115,8 +118,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，如果 {@code value} 为空，则不添加
      */
     public T addOptionHeader(String name, Object value) {
-        if (!Objects.isEmpty(value))
+        if (!Objects.isEmpty(value)) {
             _addHeader(name, value);
+        }
         return (T) this;
     }
 
@@ -131,8 +135,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 添加一个请求头，{@code value} 为空时添加空字符串
      */
     public T addNullableHeader(String name, Object value) {
-        if (Objects.nonNull(value))
+        if (Objects.nonNull(value)) {
             return _addHeader(name, value);
+        }
         return _addHeader(name, "");
     }
 
@@ -148,8 +153,9 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 删除所有请求头
      */
     public T removeAllHeaders() {
-        for (String name : headers.build().names())
+        for (String name : headers.build().names()) {
             headers.removeAll(name);
+        }
         return (T) this;
     }
 

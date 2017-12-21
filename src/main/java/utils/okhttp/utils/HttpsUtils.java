@@ -53,8 +53,9 @@ public final class HttpsUtils {
     }
 
     private static TrustManager[] prepareTrustManager(InputStream[] certificates) {
-        if (Objects.isEmpty(certificates))
+        if (Objects.isEmpty(certificates)) {
             return null;
+        }
 
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
@@ -78,8 +79,9 @@ public final class HttpsUtils {
 
     private static KeyManager[] prepareKeyManager(InputStream bksFile, String password) {
         try {
-            if (Objects.isNull(bksFile) || Objects.isNull(password))
+            if (Objects.isNull(bksFile) || Objects.isNull(password)) {
                 return null;
+            }
 
             KeyStore clientKeyStore = KeyStore.getInstance("BKS");
             clientKeyStore.load(bksFile, password.toCharArray());
@@ -94,9 +96,11 @@ public final class HttpsUtils {
     }
 
     private static X509TrustManager chooseTrustManager(TrustManager[] trustManagers) {
-        for (TrustManager trustManager : trustManagers)
-            if (trustManager instanceof X509TrustManager)
+        for (TrustManager trustManager : trustManagers) {
+            if (trustManager instanceof X509TrustManager) {
                 return (X509TrustManager) trustManager;
+            }
+        }
         return null;
     }
 

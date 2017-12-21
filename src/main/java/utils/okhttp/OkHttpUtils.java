@@ -29,8 +29,9 @@ public class OkHttpUtils {
      * 初始化 {@link OkHttpClient} 对象，需要在 {@link #getInstance} 调用之前执行
      */
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
-        if (Objects.nonNull(mInstance))
+        if (Objects.nonNull(mInstance)) {
             throw new IllegalStateException("Instance already exist, it can not be created again.");
+        }
         return (mInstance = new OkHttpUtils(okHttpClient));
     }
 
@@ -38,8 +39,9 @@ public class OkHttpUtils {
      * 获取一个 OkHttpUtils 实例
      */
     public synchronized static OkHttpUtils getInstance() {
-        if (Objects.nonNull(mInstance))
+        if (Objects.nonNull(mInstance)) {
             return mInstance;
+        }
         return (mInstance = new OkHttpUtils(null));
     }
 
@@ -68,8 +70,9 @@ public class OkHttpUtils {
      */
     public CookieStore getCookieStore() {
         final CookieJar cookieJar = mOkHttpClient.cookieJar();
-        if (cookieJar instanceof HasCookieStore)
+        if (cookieJar instanceof HasCookieStore) {
             return ((HasCookieStore) cookieJar).getCookieStore();
+        }
         return null;
     }
 
@@ -77,13 +80,17 @@ public class OkHttpUtils {
      * 根据设置的 TAG 取消相应的网络请求
      */
     public void cancelTag(Object tag) {
-        for (Call call : mOkHttpClient.dispatcher().queuedCalls())
-            if (tag.equals(call.request().tag()))
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
+            }
+        }
 
-        for (Call call : mOkHttpClient.dispatcher().runningCalls())
-            if (tag.equals(call.request().tag()))
+        for (Call call : mOkHttpClient.dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
+            }
+        }
     }
 
     /**

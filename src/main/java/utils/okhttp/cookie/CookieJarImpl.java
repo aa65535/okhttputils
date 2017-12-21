@@ -27,8 +27,9 @@ public class CookieJarImpl implements CookieJar, HasCookieStore {
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
         lock.lock();
         try {
-            for (Cookie cookie : cookies)
+            for (Cookie cookie : cookies) {
                 cookieStore.add(url, cookie);
+            }
         } finally {
             lock.unlock();
         }

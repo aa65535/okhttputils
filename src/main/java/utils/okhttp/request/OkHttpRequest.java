@@ -75,8 +75,8 @@ public abstract class OkHttpRequest {
                     .readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
                     .build()
                     .newCall(generateRequest());
-        } else
-            return okHttpClient.newCall(generateRequest());
+        }
+        return okHttpClient.newCall(generateRequest());
     }
 
     /**
@@ -132,8 +132,9 @@ public abstract class OkHttpRequest {
      * 返回当前实例的 {@link Call} 对象
      */
     public synchronized Call call() {
-        if (Objects.nonNull(call))
+        if (Objects.nonNull(call)) {
             return call;
+        }
         return (call = buildCall());
     }
 
@@ -157,8 +158,9 @@ public abstract class OkHttpRequest {
      * 执行异步网络请求，期间会调用 {@code callback} 的相关方法
      */
     public void execute() {
-        if (call().isExecuted())
+        if (call().isExecuted()) {
             throw new IllegalStateException("Already Executed");
+        }
         callback.onBefore(request());
         execute(call(), callback);
     }

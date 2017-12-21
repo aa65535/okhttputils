@@ -16,7 +16,7 @@ public abstract class Callback<T> {
      */
     public static final Callback CALLBACK_DEFAULT = new Callback() {
         @Override
-        public Object parseNetworkResponse(Response response) throws Exception {
+        public Object parseNetworkResponse(Response response) {
             return null;
         }
 

@@ -12,7 +12,7 @@ Binaries
 Gradle:
 
 ```
-compile 'utils.okhttp:okhttputils:2.4.5'
+implementation 'utils.okhttp:okhttputils:2.4.6'
 ```
 
 Maven:
@@ -21,7 +21,7 @@ Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>2.4.5</version>
+  <version>2.4.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -29,7 +29,7 @@ Maven:
 Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='2.4.5'>
+<dependency org='utils.okhttp' name='okhttputils' rev='2.4.6'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```

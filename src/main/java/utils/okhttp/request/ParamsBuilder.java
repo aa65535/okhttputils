@@ -46,9 +46,11 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数
      */
     public T addParams(Map<String, String> params) {
-        if (Objects.nonNull(params))
-            for (Entry<String, String> entry : params.entrySet())
+        if (Objects.nonNull(params)) {
+            for (Entry<String, String> entry : params.entrySet()) {
                 addParam(entry.getKey(), entry.getValue());
+            }
+        }
         return (T) this;
     }
 
@@ -58,19 +60,17 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
     public abstract T addParam(String name, Object value);
 
     /**
-     * 设置请求参数， {@code value} 不可为 {@code null}
+     * 设置请求参数
      */
-    public T setParam(String name, Object value) {
-        params.set(name, Objects.requireNonNull(value, "params [" + name + "] is null.").toString());
-        return (T) this;
-    }
+    public abstract T setParam(String name, Object value);
 
     /**
      * 添加请求参数， {@code value} 为空时不添加
      */
     public T addOptionParam(String name, Object value) {
-        if (!Objects.isEmpty(value))
+        if (!Objects.isEmpty(value)) {
             addParam(name, value);
+        }
         return (T) this;
     }
 
@@ -85,8 +85,9 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
      * 添加请求参数， {@code value} 为 {@code null} 时添加空字符串
      */
     public T addNullableParam(String name, Object value) {
-        if (Objects.nonNull(value))
+        if (Objects.nonNull(value)) {
             return addParam(name, value);
+        }
         return addParam(name, "");
     }
 
@@ -141,17 +142,16 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          * @param name 参数名
          */
         public void removeAll(String name) {
-            for (int i = 0; i < namesAndValues.size(); i += 2) {
+            for (int i = namesAndValues.size() - 2; i >= 0; i -= 2) {
                 if (name.equals(namesAndValues.get(i))) {
                     namesAndValues.remove(i); // name
                     namesAndValues.remove(i); // value
-                    i -= 2;
                 }
             }
         }
 
         /**
-         * 根据参数名设置参数值，此操作会覆盖先移除所有对应的参数值，然后添加
+         * 根据参数名设置参数值，如果参数名存在则覆盖，不存在则添加
          *
          * @param name  参数名
          * @param value 参数值
@@ -168,8 +168,9 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          */
         public String get(String name) {
             for (int i = namesAndValues.size() - 2; i >= 0; i -= 2) {
-                if (name.equals(namesAndValues.get(i)))
+                if (name.equals(namesAndValues.get(i))) {
                     return namesAndValues.get(i + 1);
+                }
             }
             return null;
         }
@@ -211,9 +212,12 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          */
         public Set<String> names() {
             TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-            for (int i = 0, size = size(); i < size; i++)
+            for (int i = 0, size = size(); i < size; i++) {
                 result.add(name(i));
-            return Collections.unmodifiableSet(result);
+            }
+            return result.isEmpty()
+                    ? Collections.<String>emptySet()
+                    : Collections.unmodifiableSet(result);
         }
 
         /**
@@ -222,17 +226,15 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          * @param name 参数名
          */
         public List<String> values(String name) {
-            List<String> result = null;
+            List<String> result = new ArrayList<>(2);
             for (int i = 0, size = size(); i < size; i++) {
                 if (name.equals(name(i))) {
-                    if (result == null)
-                        result = new ArrayList<>(2);
                     result.add(value(i));
                 }
             }
-            return result != null
-                    ? Collections.unmodifiableList(result)
-                    : Collections.<String>emptyList();
+            return result.isEmpty()
+                    ? Collections.<String>emptyList()
+                    : Collections.unmodifiableList(result);
         }
 
         /**
@@ -240,9 +242,12 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          */
         public List<Entry<String, String>> entryList() {
             List<Entry<String, String>> result = new ArrayList<>(size());
-            for (int i = 0, size = size(); i < size; i++)
+            for (int i = 0, size = size(); i < size; i++) {
                 result.add(new Node(name(i), value(i)));
-            return Collections.unmodifiableList(result);
+            }
+            return result.isEmpty()
+                    ? Collections.<Entry<String, String>>emptyList()
+                    : Collections.unmodifiableList(result);
         }
 
         static class Node implements Entry<String, String> {
