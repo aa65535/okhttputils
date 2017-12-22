@@ -27,7 +27,7 @@ public class OtherRequest extends OkHttpRequest {
 
     @Override
     protected Request buildRequest(RequestBody requestBody) {
-        requestBody = Objects.getDefinedObject(requestBody, RequestBody.create(null, new byte[0]));
+        requestBody = Objects.nonNull(requestBody) ? requestBody : RequestBody.create(null, new byte[0]);
         return builder.method(method, requestBody).build();
     }
 

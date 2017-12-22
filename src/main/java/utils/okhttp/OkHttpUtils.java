@@ -21,7 +21,7 @@ public class OkHttpUtils {
     private volatile static OkHttpUtils mInstance;
 
     private OkHttpUtils(OkHttpClient okHttpClient) {
-        mOkHttpClient = Objects.getDefinedObject(okHttpClient, new OkHttpClient.Builder().build());
+        mOkHttpClient = Objects.nonNull(okHttpClient) ? okHttpClient : new OkHttpClient.Builder().build();
         mThreadExecutor = new ThreadExecutor();
     }
 
