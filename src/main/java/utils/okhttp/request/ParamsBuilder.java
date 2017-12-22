@@ -2,11 +2,13 @@ package utils.okhttp.request;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 import utils.okhttp.utils.Objects;
 
@@ -102,9 +104,60 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
     /**
      * 移除所有请求参数
      */
+    @Deprecated
     public T removeAllParam() {
+        return clearParams();
+    }
+
+    /**
+     * 移除所有请求参数
+     */
+    public T clearParams() {
         params.clear();
         return (T) this;
+    }
+
+    /**
+     * 按照自然顺序对请求参数排序
+     */
+    public T sortParams() {
+        params.sort();
+        return (T) this;
+    }
+
+    /**
+     * 按照给定的比较器对请求参数排序
+     */
+    public T sortParams(Comparator<String> comparator) {
+        params.sort(comparator);
+        return (T) this;
+    }
+
+    /**
+     * 对请求参数签名，会在请求参数后追加 {@code &sign=xxx}
+     * @param signature {@link Signature} 的实现类
+     */
+    public T signParams(Signature signature) {
+        return signParams("sign", signature);
+    }
+
+    /**
+     * 对请求参数签名，会在请求参数后追加 {@code &name=xxx}
+     * @param name 签名的参数名称
+     * @param signature  {@link Signature} 的实现类
+     */
+    public T signParams(String name, Signature signature) {
+        addParam(name, signature.sign(params.unmodifiableParams()));
+        return (T) this;
+    }
+
+    public interface Signature {
+        /**
+         * 对传入的请求参数进行签名
+         * @param params 待签名的请求参数，不可修改的
+         * @return 签名后的字符串
+         */
+        String sign(Params params);
     }
 
     /**
@@ -190,6 +243,33 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
         }
 
         /**
+         * 按照自然顺序对参数名排序
+         */
+        public void sort() {
+            sort(null);
+        }
+
+        /**
+         * 按照给定的比较器对参数名排序
+         */
+        public void sort(Comparator<String> comparator) {
+            TreeMap<String, List<String>> temp = new TreeMap<>(comparator);
+            for (int i = 0, size = size(); i < size; i++) {
+                String name = name(i);
+                if (!temp.containsKey(name)) {
+                    temp.put(name, new ArrayList<String>(2));
+                }
+                temp.get(name).add(value(i));
+            }
+            clear();
+            for (Entry<String, List<String>> entry : temp.entrySet()) {
+                for (String value : entry.getValue()) {
+                    add(entry.getKey(), value);
+                }
+            }
+        }
+
+        /**
          * 根据索引返回对应的参数名
          *
          * @param index 索引
@@ -211,7 +291,7 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
          * 返回由所有参数名所组成的 Set
          */
         public Set<String> names() {
-            TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+            Set<String> result = new LinkedHashSet<>(size());
             for (int i = 0, size = size(); i < size; i++) {
                 result.add(name(i));
             }

@@ -1,31 +1,37 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
 plugins {
     id "com.jfrog.bintray" version "1.8.0"
 }
 
 group = 'utils.okhttp'
-version = '2.4.6'
-
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
+version = '2.4.7'
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    testImplementation 'com.google.code.gson:gson:2.8.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+task createJavadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+}
+
+task javadocJar(type: Jar, dependsOn: createJavadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
@@ -52,8 +58,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact javadocJar
-            artifact sourcesJar
+            groupId
+            artifactId 'okhttputils'
+            version this.version
 
             pom.withXml {
                 def root = asNode()
@@ -62,11 +69,6 @@ publishing {
             }
         }
     }
-}
-
-dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    testImplementation 'com.google.code.gson:gson:2.8.2'
 }
 
 bintray {
@@ -80,15 +82,24 @@ bintray {
         key = System.getenv('bintray.apikey')
     }
     publications = ['mavenJava']
+    configurations = ['archives']
+    override = true
     pkg {
         repo = 'maven'
         name = 'okhttputils'
         desc = 'A Java utils library for Okhttp'
+        publicDownloadNumbers = true
         websiteUrl = 'https://github.com/aa65535/okhttputils'
         issueTrackerUrl = 'https://github.com/aa65535/okhttputils/issues'
         vcsUrl = 'https://github.com/aa65535/okhttputils.git'
         licenses = ['Apache-2.0']
         publicDownloadNumbers = true
+        version {
+            name = this.version
+            desc = "Released ${this.version}"
+            released = new Date()
+            vcsTag = this.version
+        }
     }
 }
 
