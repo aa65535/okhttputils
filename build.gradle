@@ -98,9 +98,9 @@ bintray {
         publicDownloadNumbers = true
         version {
             name = this.version
-            desc = "Released ${this.version}"
+            desc = "release v${this.version}"
             released = new Date()
-            vcsTag = this.version
+            vcsTag = "v${this.version}"
         }
     }
 }
