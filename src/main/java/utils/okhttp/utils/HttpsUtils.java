@@ -105,8 +105,8 @@ public final class HttpsUtils {
     }
 
     public static class SSLParams {
-        public SSLSocketFactory sslSocketFactory;
-        public X509TrustManager trustManager;
+        public final SSLSocketFactory sslSocketFactory;
+        public final X509TrustManager trustManager;
 
         public SSLParams(SSLSocketFactory sslSocketFactory, X509TrustManager trustManager) {
             this.sslSocketFactory = sslSocketFactory;
@@ -123,13 +123,11 @@ public final class HttpsUtils {
 
     private static class UnSafeTrustManager implements X509TrustManager {
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType)
-                throws CertificateException {
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
         }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType)
-                throws CertificateException {
+        public void checkServerTrusted(X509Certificate[] chain, String authType) {
         }
 
         @Override
@@ -150,7 +148,7 @@ public final class HttpsUtils {
         }
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
         }
 
         @Override
