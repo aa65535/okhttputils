@@ -82,7 +82,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 设置请求头
      */
     public T headers(Map<String, String> headers) {
-        removeAllHeaders();
+        clearHeaders();
         return addHeaders(headers);
     }
 
@@ -152,7 +152,15 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     /**
      * 删除所有请求头
      */
+    @Deprecated
     public T removeAllHeaders() {
+        return clearHeaders();
+    }
+
+    /**
+     * 删除所有请求头
+     */
+    public T clearHeaders() {
         for (String name : headers.build().names()) {
             headers.removeAll(name);
         }

@@ -8,6 +8,10 @@ import java.util.concurrent.Executors;
 public final class ThreadExecutor {
     private final Executor executor;
 
+    /**
+     * 会尝试创建 Android 下的 UI 池线程
+     * 如果失败则创建一个普通的 Java 线程池
+     */
     public ThreadExecutor() {
         executor = findExecutors();
     }
@@ -24,6 +28,11 @@ public final class ThreadExecutor {
         return Executors.newCachedThreadPool();
     }
 
+    /**
+     * 执行给定的命令
+     *
+     * @param runnable 可运行的任务
+     */
     public void execute(Runnable runnable) {
         executor.execute(runnable);
     }

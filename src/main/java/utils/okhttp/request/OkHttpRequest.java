@@ -148,7 +148,7 @@ public abstract class OkHttpRequest {
     /**
      * 执行同步网络请求，并返回 {@link Response} 对象
      *
-     * @throws IOException
+     * @throws IOException 由 {@link Call#execute()} 抛出的异常
      */
     public Response response() throws IOException {
         return call().execute();

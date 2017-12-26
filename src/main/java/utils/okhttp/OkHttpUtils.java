@@ -26,7 +26,11 @@ public class OkHttpUtils {
     }
 
     /**
-     * 初始化 {@link OkHttpClient} 对象，需要在 {@link #getInstance} 调用之前执行
+     * 使用特定的 {@link OkHttpClient} 对象初始化 {@link OkHttpUtils}，
+     * 如果在 {@link #getInstance} 调用之后执行，则会抛出 {@link IllegalStateException} 异常
+     *
+     * @param okHttpClient 传入的 {@link OkHttpClient} 对象
+     * @return 当前 {@link OkHttpUtils} 实例
      */
     public synchronized static OkHttpUtils initClient(OkHttpClient okHttpClient) {
         if (Objects.nonNull(mInstance)) {
@@ -36,7 +40,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * 获取一个 OkHttpUtils 实例
+     * 获取当前 {@link OkHttpUtils} 实例
      */
     public synchronized static OkHttpUtils getInstance() {
         if (Objects.nonNull(mInstance)) {
@@ -46,7 +50,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * 获取 {@link OkHttpClient} 对象
+     * 获取当前实例中的 {@link OkHttpClient} 对象
      *
      * @return {@link OkHttpClient} 对象
      */
@@ -55,7 +59,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * 获取线程池对象
+     * 获取当前实例中的线程池对象
      *
      * @return {@link ThreadExecutor} 对象
      */

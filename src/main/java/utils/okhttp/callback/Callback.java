@@ -31,6 +31,8 @@ public abstract class Callback<T> {
 
     /**
      * 网络请求发起之前调用，Android 下使用 UI 线程
+     *
+     * @param request 当前请求的 {@link Request} 对象
      */
     public void onBefore(Request request) {
     }
@@ -56,12 +58,15 @@ public abstract class Callback<T> {
      *
      * @param response Response 实例，包含请求响应内容
      * @return 返回应的泛型类型
-     * @throws Exception
+     * @throws Exception 如果解析出错
      */
     public abstract T parseNetworkResponse(Response response) throws Exception;
 
     /**
      * 当网络请求被取消、连接问题、服务器返回错误码或超时执行时调用，Android 下使用 UI 线程
+     *
+     * @param call 当前请求的 {@link Call} 对象
+     * @param e    出错时接收到的异常对象
      */
     public abstract void onError(Call call, Exception e);
 

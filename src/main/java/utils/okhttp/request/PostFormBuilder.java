@@ -79,9 +79,9 @@ public class PostFormBuilder extends ParamsBuilder<PostFormBuilder> {
     }
 
     public static class FileInput {
-        public String name;
-        public String filename;
-        public File file;
+        public final String name;
+        public final String filename;
+        public final File file;
 
         public FileInput(String name, String filename, File file) {
             this.name = name;
