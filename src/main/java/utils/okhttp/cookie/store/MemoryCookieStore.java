@@ -11,7 +11,7 @@ import utils.okhttp.utils.Objects;
 
 @SuppressWarnings("unused")
 public class MemoryCookieStore implements CookieStore {
-    private final List<Cookie> cookieJar;
+    protected final List<Cookie> cookieJar;
 
     public MemoryCookieStore() {
         cookieJar = new ArrayList<>();
@@ -30,7 +30,7 @@ public class MemoryCookieStore implements CookieStore {
     public List<Cookie> get(HttpUrl url) {
         Objects.requireNonNull(url, "url is null");
         List<Cookie> cookies = new ArrayList<>();
-        for (Cookie cookie : unexpired()) {
+        for (Cookie cookie : getCookies()) {
             if (cookie.matches(url)) {
                 cookies.add(cookie);
             }
@@ -40,7 +40,13 @@ public class MemoryCookieStore implements CookieStore {
 
     @Override
     public List<Cookie> getCookies() {
-        return Collections.unmodifiableList(unexpired());
+        Iterator<Cookie> it = cookieJar.iterator();
+        while (it.hasNext()) {
+            if (isExpired(it.next())) {
+                it.remove();
+            }
+        }
+        return Collections.unmodifiableList(cookieJar);
     }
 
     @Override
@@ -65,21 +71,11 @@ public class MemoryCookieStore implements CookieStore {
         return false;
     }
 
-    private List<Cookie> unexpired() {
-        Iterator<Cookie> it = cookieJar.iterator();
-        while (it.hasNext()) {
-            if (isExpired(it.next())) {
-                it.remove();
-            }
-        }
-        return cookieJar;
-    }
-
-    private static boolean isExpired(Cookie cookie) {
+    protected static boolean isExpired(Cookie cookie) {
         return cookie.expiresAt() < System.currentTimeMillis();
     }
 
-    private static boolean equals(Cookie c1, Cookie c2) {
+    protected static boolean equals(Cookie c1, Cookie c2) {
         return c1 == c2 ||
                 Objects.equals(c1.name(), c2.name()) &&
                         Objects.equals(c1.domain(), c2.domain()) &&
