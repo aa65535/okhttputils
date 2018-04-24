@@ -1,6 +1,7 @@
 package utils.okhttp.request;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -52,6 +53,23 @@ public abstract class ParamsBuilder<T extends ParamsBuilder> extends OkHttpBuild
             for (Entry<String, String> entry : params.entrySet()) {
                 addParam(entry.getKey(), entry.getValue());
             }
+        }
+        return (T) this;
+    }
+
+    /**
+     * 添加数组请求参数
+     */
+    public T addArrayParam(String name, Object[] values) {
+        return addArrayParam(name, Arrays.asList(values));
+    }
+
+    /**
+     * 添加数组请求参数
+     */
+    public T addArrayParam(String name, List<?> values) {
+        for (Object value : values) {
+            addParam(name.endsWith("[]") ? name : name + "[]", value);
         }
         return (T) this;
     }
