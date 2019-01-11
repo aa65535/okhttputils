@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
@@ -72,26 +71,33 @@ public class PersistentCookieStore extends MemoryCookieStore {
         return null;
     }
 
-    private String byteArrayToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder(bytes.length * 2);
-        for (byte element : bytes) {
-            int v = element & 0xff;
-            if (v < 16) {
-                sb.append('0');
-            }
-            sb.append(Integer.toHexString(v));
+    private static String byteArrayToHexString(byte[] bytes) {
+        final char[] hexArray = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        char[] hexChars = new char[bytes.length * 2];
+        int v;
+        for (int i = 0; i < bytes.length; i++) {
+            v = bytes[i] & 0xFF;
+            hexChars[i * 2] = hexArray[v >>> 4];
+            hexChars[i * 2 + 1] = hexArray[v & 0x0F];
         }
-        return sb.toString().toUpperCase(Locale.US);
+        return new String(hexChars);
     }
 
-    private byte[] hexStringToByteArray(String hexString) {
+    private static byte[] hexStringToByteArray(String hexString) {
         int len = hexString.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
+        if (len % 2 == 1) {
+            throw new IllegalArgumentException("Hex string must have even number of characters");
         }
-        return data;
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            bytes[i / 2] = (byte) ((charToInt(hexString.charAt(i)) << 4) | charToInt(hexString.charAt(i + 1)));
+        }
+        return bytes;
+    }
+
+    private static int charToInt(char ch) {
+        int i = ch - '0';
+        return i > 16 ? i - 7 : i;
     }
 
     /**

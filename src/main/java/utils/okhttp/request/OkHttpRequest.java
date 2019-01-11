@@ -1,6 +1,8 @@
 package utils.okhttp.request;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -18,7 +20,7 @@ import utils.okhttp.utils.Objects;
 @SuppressWarnings({"unchecked", "unused"})
 public abstract class OkHttpRequest {
     protected String url;
-    protected Object tag;
+    protected Map<Class<?>, Object> tags;
     protected Headers headers;
     protected Callback callback;
     protected long connTimeOut;
@@ -30,13 +32,16 @@ public abstract class OkHttpRequest {
 
     protected OkHttpRequest(OkHttpBuilder builder) {
         this.url = builder.url;
-        this.tag = builder.tag;
+        this.tags = Util.immutableMap(builder.tags);
         this.headers = builder.headers.build();
         this.callback = builder.callback;
         this.connTimeOut = builder.connTimeOut;
         this.writeTimeOut = builder.writeTimeOut;
         this.readTimeOut = builder.readTimeOut;
-        this.builder = new Builder().url(url).tag(tag).headers(headers);
+        this.builder = new Builder().url(url).headers(headers);
+        for (Entry<Class<?>, Object> entry : tags.entrySet()) {
+            this.builder.tag((Class<? super Object>) entry.getKey(), entry.getValue());
+        }
     }
 
     /**
@@ -90,7 +95,14 @@ public abstract class OkHttpRequest {
      * 返回当前实例的 {@code tag}
      */
     public Object tag() {
-        return tag;
+        return call().request().tag();
+    }
+
+    /**
+     * 返回当前实例的 {@code tag}
+     */
+    public <T> T tag(Class<? extends T> type) {
+        return call().request().tag(type);
     }
 
     /**
@@ -211,8 +223,7 @@ public abstract class OkHttpRequest {
                         return;
                     }
                     if (!response.isSuccessful()) {
-                        //noinspection ConstantConditions
-                        sendFailResultCallback(call, new RuntimeException(response.body().string()), callback);
+                        sendFailResultCallback(call, new RuntimeException(response.message()), callback);
                         return;
                     }
                     sendSuccessResultCallback(callback.parseNetworkResponse(response), callback);

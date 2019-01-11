@@ -12,7 +12,7 @@ Binaries
 Gradle:
 
 ```
-implementation 'utils.okhttp:okhttputils:2.4.8'
+implementation 'utils.okhttp:okhttputils:2.4.9'
 ```
 
 Maven:
@@ -21,7 +21,7 @@ Maven:
 <dependency>
   <groupId>utils.okhttp</groupId>
   <artifactId>okhttputils</artifactId>
-  <version>2.4.8</version>
+  <version>2.4.9</version>
   <type>pom</type>
 </dependency>
 ```
@@ -29,7 +29,7 @@ Maven:
 Ivy:
 
 ```
-<dependency org='utils.okhttp' name='okhttputils' rev='2.4.8'>
+<dependency org='utils.okhttp' name='okhttputils' rev='2.4.9'>
   <artifact name='$AID' ext='pom'></artifact>
 </dependency>
 ```
@@ -38,23 +38,11 @@ ProGuard
 ===
 
 ```
-#OkHttpUtils
--keep class utils.okhttp.**{ *; }
--keep interface utils.okhttp.** { *; }
--dontwarn utils.okhttp.**
-
-# OkHttp
--keepattributes Signature
--keepattributes *Annotation*
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
-
-# Okio
--keep class sun.misc.Unsafe { *; }
--dontwarn java.nio.file.*
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn okio.**
+# OkHttp3
+-dontwarn javax.annotation.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
 ```
 
 License

@@ -16,7 +16,7 @@ public abstract class FileCallBack extends Callback<File> {
     private int bufferSize;
 
     /**
-     * @param destFile    目标文件
+     * @param destFile 目标文件
      */
     public FileCallBack(File destFile) {
         this(destFile, BUFFER_SIZE);
@@ -39,9 +39,8 @@ public abstract class FileCallBack extends Callback<File> {
     }
 
     /**
-     *
-     * @param destFile    目标文件
-     * @param bufferSize  缓存区大小
+     * @param destFile   目标文件
+     * @param bufferSize 缓存区大小
      */
     public FileCallBack(File destFile, int bufferSize) {
         this.destFile = destFile;
@@ -94,9 +93,7 @@ public abstract class FileCallBack extends Callback<File> {
                     onGetFileSize(total);
                 }
             });
-            //noinspection ResultOfMethodCallIgnored
             destFile.getParentFile().mkdirs();
-            //noinspection ConstantConditions
             is = response.body().byteStream();
             fos = new FileOutputStream(destFile);
             while ((len = is.read(buf)) != -1) {

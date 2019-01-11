@@ -28,10 +28,8 @@ public class GetBuilder extends ParamsBuilder<GetBuilder> {
         if (Objects.isNull(params)) {
             params = new Params();
         }
-        HttpUrl httpUrl = HttpUrl.parse(Objects.requireNonNull(url, "url is null."));
-        httpUrlBuilder = Objects.requireNonNull(httpUrl,
-                new IllegalArgumentException("unexpected url: " + url)).newBuilder();
-        //noinspection ConstantConditions
+        HttpUrl httpUrl = HttpUrl.get(Objects.requireNonNull(url, "url is null."));
+        httpUrlBuilder = httpUrl.newBuilder();
         for (String name : httpUrl.queryParameterNames()) {
             httpUrlBuilder.removeAllQueryParameters(name);
             for (String value : httpUrl.queryParameterValues(name)) {

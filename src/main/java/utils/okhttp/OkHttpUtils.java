@@ -84,14 +84,21 @@ public class OkHttpUtils {
      * 根据设置的 TAG 取消相应的网络请求
      */
     public void cancelTag(Object tag) {
+        cancelTag(Object.class, tag);
+    }
+
+    /**
+     * 根据设置的 TAG 取消相应的网络请求
+     */
+    public void cancelTag(Class<?> type, Object tag) {
         for (Call call : mOkHttpClient.dispatcher().queuedCalls()) {
-            if (tag.equals(call.request().tag())) {
+            if (tag.equals(call.request().tag(type))) {
                 call.cancel();
             }
         }
 
         for (Call call : mOkHttpClient.dispatcher().runningCalls()) {
-            if (tag.equals(call.request().tag())) {
+            if (tag.equals(call.request().tag(type))) {
                 call.cancel();
             }
         }

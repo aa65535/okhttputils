@@ -1,5 +1,6 @@
 package utils.okhttp.request;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -17,7 +18,7 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     public static final MediaType MEDIA_TYPE_XML = MediaType.parse("application/xml;charset=utf-8");
 
     protected String url;
-    protected Object tag;
+    protected Map<Class<?>, Object> tags;
     protected Builder headers;
     protected Callback callback;
     protected long connTimeOut;
@@ -25,13 +26,14 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
     protected long readTimeOut;
 
     public OkHttpBuilder() {
+        this.tags = new LinkedHashMap<>();
         this.headers = new Builder();
         this.callback = Callback.CALLBACK_DEFAULT;
     }
 
     protected OkHttpBuilder(OkHttpRequest request) {
         this.url(request.url);
-        this.tag(request.tag);
+        this.tags = new LinkedHashMap<>(request.tags);
         this.headers(request.headers);
         this.callback(request.callback);
         this.connTimeOut(request.connTimeOut);
@@ -56,7 +58,18 @@ public abstract class OkHttpBuilder<T extends OkHttpBuilder> {
      * 设置请求的 TAG
      */
     public T tag(Object tag) {
-        this.tag = tag;
+        return tag(Object.class, tag);
+    }
+
+    /**
+     * 设置请求的 TAG
+     */
+    public T tag(Class<?> type, Object tag) {
+        if (tag == null) {
+            tags.remove(type);
+        } else {
+            tags.put(type, tag);
+        }
         return (T) this;
     }
 
