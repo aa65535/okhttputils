@@ -8,6 +8,11 @@ version = '2.4.9'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
 repositories {
     jcenter()
     mavenCentral()
@@ -102,6 +107,6 @@ bintray {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '5.1.1'
 }
